@@ -17,3 +17,8 @@ github_username:  oxomichael
 
 # Build settings
 markdown: kramdown
+
+# Piwik
+piwik:
+ base_url: stat.mstash.net
+ site_id: 2
