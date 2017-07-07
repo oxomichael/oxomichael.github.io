@@ -1,3 +1,10 @@
+---
+layout: post
+title:  "Create a vagrant box from scratch"
+date:   2017-06-30 21:07:00 +0200
+categories: vagrant debian
+---
+
 # Create a vagrant box from scratch
 
 ## Box Debian Stretch 64
