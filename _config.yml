@@ -20,5 +20,5 @@ markdown: kramdown
 
 # Piwik
 piwik:
- base_url: stat.mstash.net
+ base_url: apps.mstash.net/piwik
  site_id: 2
