@@ -5,13 +5,11 @@ date:   2017-06-30 21:07:00 +0200
 categories: vagrant debian
 ---
 
-# Create a vagrant box from scratch
-
 ## Box Debian Stretch 64
 
 * Install VirtualBox
 * Install Vagrant
-* Télécharcher le CD d'installation de Debian
+* Download the debian net install CD
 * Create virtual machine
 
 ### Virtual Machine
