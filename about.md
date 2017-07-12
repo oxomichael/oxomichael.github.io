@@ -4,12 +4,13 @@ title: About
 permalink: /about/
 ---
 
-## Who am I ?
+# Who am I ?
 
-* PHP Developer
-* DevOps (GNU/Linux, Debian, Ubuntu)
-* Biker
+	* PHP Developer 
+	* DevOps (GNU/Linux, Debian, Ubuntu)
+	* Biker
+	* French
 
-## Work Experience
+# Work Experience
 
 
