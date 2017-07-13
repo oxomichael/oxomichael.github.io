@@ -76,7 +76,7 @@ Administration Système
 * Gestion des serveurs et du parc informatique.
 
 
-## 2007 to 2007
+## 2007 to 2007
 
 * Conception de sites Internet, (PHP, MySQL, HTML, CSS)
 * Développement d'interfaces d'administration de données
@@ -84,7 +84,7 @@ Administration Système
 * Applications, frameworks et composants utilisés : Thelia, OsCommerce, Adodb, Smarty, ...
 
 
-## 2003 to 2007
+## 2003 to 2007
 
 * Conception d‘ordinateurs industriels, Réalisation cartes électroniques (Altium Designer)
 * Étude matériel et logiciel, Support client.
@@ -92,7 +92,7 @@ Administration Système
 * Installation et configuration de l'environnement logiciel.
 
 
-## 2003
+## 2003
 
 * Création d‘un logiciel de gestion du parc des machines vendues et louées (Windev).
 * Migration vers Windows 2000-XP de plusieurs développements informatiques.
