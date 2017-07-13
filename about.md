@@ -4,12 +4,14 @@ title: About
 permalink: /about/
 ---
 
+
 # Who am I ?
 
 * PHP Developer
 * DevOps (GNU/Linux, Debian, Ubuntu)
 * Biker
 * French - Lives near Paris, in the west
+
 
 # Skills and Technologies
 
@@ -33,6 +35,7 @@ permalink: /about/
  * HTML, Javascript, CSS
  * Jquery, Jquery-UI
  * Bootstrap
+
 
 # Work Experience (in progress) 
 
@@ -66,11 +69,13 @@ Administration Système
 * MariaDB avec docker
 * Réplication MySQL / MariaDB
 
+
 ## 2007 - 2009
 
 * Développement Web (PHP, MySQL, HTML, CSS), FLASH (Actionscript), AIR
 * Intégration de CMS : Drupal, THELIA
 * Gestion des serveurs et du parc informatique.
+
 
 ## 2007 - 2007
 
@@ -79,12 +84,14 @@ Administration Système
 * Maintenance serveurs sous système GNU/Linux.
 * Applications, frameworks et composants utilisés : Thelia, OsCommerce, Adodb, Smarty, ...
 
+
 ## 2003 - 2007
 
 * Conception d‘ordinateurs industriels, Réalisation cartes électroniques (Altium Designer)
 * Étude matériel et logiciel, Support client.
 * Rédaction de cahiers des charges, choix des composants, intégration.
 * Installation et configuration de l'environnement logiciel.
+
 
 ## 2003 Agedoc
 
