@@ -31,7 +31,7 @@ permalink: /about/
   * Bootstrap
 
 
-# Work Experience (in progress)
+# Work Experience (in progress)
 
 ## 2017 to now
 * E-commerce
