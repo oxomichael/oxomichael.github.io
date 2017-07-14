@@ -6,10 +6,10 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: mStash
+title: Blog Adventure on PHP and it's ecosystem
 email: oxomichael@hotmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  PHP, Development, Tools and a whole lot of thing 
+  PHP, Development, Tools and a whole lot of thing
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://oxomichael.github.io/" # the base hostname & protocol for your site
 twitter_username: oxomichael
