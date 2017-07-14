@@ -18,6 +18,9 @@ github_username:  oxomichael
 # Build settings
 markdown: kramdown
 
+gems:
+  - jekyll-sitemap
+
 # Piwik
 piwik:
  base_url: apps.mstash.net/piwik
