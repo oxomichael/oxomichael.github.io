@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Symfony basic package and his configuration"
+title:  "Symfony basic starting"
 date:   2017-07-15 23:00:00 +0200
 categories: symfony packages
 ---
