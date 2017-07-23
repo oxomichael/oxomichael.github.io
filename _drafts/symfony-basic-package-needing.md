@@ -5,15 +5,25 @@ date:   2017-07-15 23:00:00 +0200
 categories: symfony packages
 ---
 
-Basic start of a symfony project (version 3)
+Basic start of a symfony project (version 3.x)
 
 # Create your project
-`$ composer create-project symfony/framework-standard-edition my_project_name lts`
+`$ composer create-project symfony/framework-standard-edition my_project_name`
 
-Use LTS version, if you are not reckless.
+If you want to use an LTS version you can specify a version.
+`$ composer create-project symfony/framework-standard-edition my_project_name "2.8.*"`
 
-# Apache
-I choose to use Apache with php-fpm.
+# Use Git to store your project
+You can see a `.gitignore` file, open it to see which files of your project is ignore.
+
+Simply use these commands to make your initial commit
+```
+git init
+git add .
+git commit -m "Initial commit"
+```
+
+# Apache with PHP-FPM
 
 ## Sample configuration
 ```
@@ -131,6 +141,12 @@ It's always interesting to use the same configuration in dev and in production.
 I prefer to not discover a configuration problem in production, so i always
 keep my dev environment as my production.
 
+# Specific development configuration
+
+I use vagrant or docker for dev environment so i have to tweek `app_dev.php`
+
+
+
 
 # Frontend
 
@@ -140,13 +156,32 @@ composer require symfony/assetic-bundle
 
 JQuery
 composer require components/jquery
+composer require components/jqueryui
 
 Bootstrap
-php composer require twbs/bootstrap
+composer require twbs/bootstrap
 
 FontAwesome
 composer require fortawesome/font-awesome
 
+
+kriswallsmith/assetic suggests installing leafo/lessphp (Assetic provides the integration with the lessphp LESS compiler)
+kriswallsmith/assetic suggests installing leafo/scssphp (Assetic provides the integration with the scssphp SCSS compiler)
+kriswallsmith/assetic suggests installing ptachoire/cssembed (Assetic provides the integration with phpcssembed to embed data uris)
+kriswallsmith/assetic suggests installing leafo/scssphp-compass (Assetic provides the integration with the SCSS compass plugin)
+kriswallsmith/assetic suggests installing patchwork/jsqueeze (Assetic provides the integration with the JSqueeze JavaScript compressor)
+symfony/assetic-bundle suggests installing kriswallsmith/spork (to be able to dump assets in parallel)
+
+Dev
+php bin/console assets:install --symlink
+php bin/console assetic:dump
+Prod
+php bin/console assets:install --symlink --env prod
+php app/console assetic:dump --env prod
+
+Redis Session Handler
+
+Monolog
 
 # Backend
 
