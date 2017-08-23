@@ -7,7 +7,7 @@ categories: symfony packages
 
 Deploy PHP Apps with [Ansistrano](https://ansistrano.com/)
 
-# Installation Ansible
+# Installation Ansible
 
 > $ sudo apt-get install software-properties-common  
 > $ sudo apt-add-repository ppa:ansible/ansible  
