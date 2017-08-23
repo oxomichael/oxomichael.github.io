@@ -5,6 +5,8 @@ date:   2017-07-15 23:00:00 +0200
 categories: symfony packages
 ---
 
+Deploy PHP Apps with [Ansistrano](https://ansistrano.com/)
+
 # Installation Ansible
 
 > $ sudo apt-get install software-properties-common  
