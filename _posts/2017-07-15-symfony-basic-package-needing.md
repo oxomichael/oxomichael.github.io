@@ -14,7 +14,7 @@ Use LTS version, if you are not reckless.
 # Apache
 I choose to use Apache with php-fpm.
 
-## Sample configuration
+## Sample configuration  
 ```
 <VirtualHost *:80>
 	ServerName symfony.local
@@ -57,7 +57,7 @@ I choose to use Apache with php-fpm.
 </VirtualHost>
 ```
 
-## Production configuration
+## Production configuration  
 But in order to use in a production server for better performance:
  - Disabling .htaccess support
  - Disabling other items
@@ -130,7 +130,7 @@ It's always interesting to use the same configuration in dev and in production.
 I prefer to not discover a configuration problem in production, so i always
 keep my dev environment as my production.
 
-# Create your Boilerplate with interesting package
+# Create your Boilerplate with interesting package  
 
 ## Backend
 FOS User Bundle
