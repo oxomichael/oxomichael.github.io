@@ -58,7 +58,7 @@ I choose to use Apache with php-fpm.
 </VirtualHost>
 ```
 
-## Production configuration
+## Production configuration
 
 But in order to use in a production server for better performance:
  - Disabling .htaccess support
@@ -134,7 +134,7 @@ keep my dev environment as my production.
 
 # Create your Boilerplate with interesting package  
 
-## Backend
+## Backend
 
 FOS User Bundle
 HWIOAuthBundle
