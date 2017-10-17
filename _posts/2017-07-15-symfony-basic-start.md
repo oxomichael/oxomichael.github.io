@@ -2,7 +2,7 @@
 layout: post
 title:  "Symfony basic start"
 date:   2017-07-15 23:00:00 +0200
-categories: symfony packages
+categories: php symfony packages
 ---
 Basic start of a symfony project (version 3)
 

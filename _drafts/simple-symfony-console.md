@@ -84,7 +84,9 @@ class Hash{
 
 It’s time to create our command. Let’s create a new PHP file called HashCommand.php.
 
-This class will extend from Symfony’s Command class and implement the configure and execute methods. These methods are essential for our command as they tell it how to look and behave.
+This class will extend from Symfony’s Command class and implement the configure
+and execute methods. These methods are essential for our command as they tell
+it how to look and behave.
 
 This is what the finished command looks like:
 
