@@ -1,8 +1,10 @@
 ---
 layout: post
-title:  "Customize Symfony for development environment"
-date:   2017-07-14 11:45:00 +0200
 categories: symfony php development
+date: 2017-07-14 11:45:00 +0200
+lang: en
+ref: 2017-07-14-customize-symfony-for-development-environment
+title: "Customize Symfony for development environment"
 ---
 When you use a development environment similar to the production, you can't use the `app_dev.php` as given.
 - With vagrant your front IP could be 192.168.33.10

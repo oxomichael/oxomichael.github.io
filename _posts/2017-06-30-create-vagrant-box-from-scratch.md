@@ -1,8 +1,10 @@
 ---
 layout: post
-title:  "Create a vagrant box from scratch"
-date:   2017-06-30 21:07:00 +0200
 categories: vagrant debian
+date: 2017-06-30 21:07:00 +0200
+lang: en
+ref: 2017-06-30-create-vagrant-box-from-scratch
+title: "Create a vagrant box from scratch"
 ---
 
 ## Box Debian Stretch 64
@@ -61,9 +63,9 @@ Choose Graphical Install
 * Give sudo permission to vagrant
 
  > $ visudo -f /etc/sudoers.d/vagrant
- 
+
 * Add the following line to authorize vagrant use sudo without password
- > `vagrant ALL=(ALL) NOPASSWD:ALL` 
+ > `vagrant ALL=(ALL) NOPASSWD:ALL`
 
 * Exit and disconnect user
 * Update and upgrade
@@ -135,4 +137,3 @@ Choose Graphical Install
 > $ vagrant init vagrant-stretch64
 
 > $ vagrant up
- 
