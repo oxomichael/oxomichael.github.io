@@ -18,6 +18,7 @@ github_username:  oxomichael
 # Build settings
 markdown: kramdown
 
+# PLugins
 plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
