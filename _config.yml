@@ -11,7 +11,7 @@ email: oxomichael@hotmail.com
 description: > # this means to ignore newlines until "baseurl:"
   PHP, Development, Tools and a whole lot of thing
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://oxomichael.github.io/" # the base hostname & protocol for your site
+url: "https://oxomichael.github.io" # the base hostname & protocol for your site
 twitter_username: oxomichael
 github_username:  oxomichael
 
