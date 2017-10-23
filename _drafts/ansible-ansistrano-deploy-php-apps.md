@@ -7,7 +7,7 @@ categories: symfony packages
 
 Deploy PHP Apps with [Ansistrano](https://ansistrano.com/)
 
-# Installation Ansible
+# Install Ansible
 
 > $ sudo apt-get install software-properties-common  
 > $ sudo apt-add-repository ppa:ansible/ansible  
@@ -18,7 +18,7 @@ In /etc/ansible/ansible.cfg
  [defaults]  
  host_key_checking = false  
 
-# Installation Ansistrano
+# Install Ansistrano
 > $ ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback
 
 Update
@@ -77,6 +77,7 @@ Check main vhost
 Filter to execute only on one host
 > $ ansible-playbook -i {inventory} -l 192.168.0.0 playbook.yml
 
+
 # Manage a project to deploy
 
 We want to make progressive deployment, so we have to define how to work.
@@ -85,10 +86,50 @@ With standard git branch :
 - develop : staging
 
 
-Récupération de la branch "master" du projet dans /home/vhosts/deploy/export
+Following are the commands to execute a deployement
 
 Deploying
 > $ ansible-playbook -i hosts -e "ansistrano_release_version=`date -u +%Y%m%d%H%M%SZ`" deploy.yml
 
 Rolling back
 > $ ansible-playbook -i hosts rollback.yml
+
+Now go read the documentation of Ansistrano to see all the step in the workflow.
+
+```
+-- /home/vhosts/my-app.com
+|-- current -> /home/vhosts/my-app.com/releases/20100512131539
+|-- releases
+|   |-- 20100512131539
+|   |-- 20100509150741
+|   |-- 20100509145325
+|-- shared
+```
+
+You have to make some operation locally and remotely.
+
+Locally :
+- Clone your project
+- Install dependencies
+- ... and all other things
+
+Remotely :
+- Files are automatically sent (via rsync) in your remote place
+- Clean temporary files and warmup cache
+
+Sample with my web app
+
+```
+/home/deploy/ansible/my-app.com
+|-- hosts-prod
+|-- deploy.yml
+|-- etc
+|-- config
+|-- tasks
+|   |-- before-code-update.yml
+|   |-- after-code-update.yml
+|   |-- before-symlink.yml
+|   |-- after-symlink.yml
+|   |-- before-cleanup.yml
+|   |-- after-cleanup.yml
+```
