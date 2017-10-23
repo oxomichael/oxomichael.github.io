@@ -145,10 +145,10 @@ Sample with my web app
 |   |-- after-cleanup.yml
 ```
 
-hosts-prod : contains your production server definition  
-deploy.yml :  
-etc/ : specific server config files to be place in your remote server  
-config/ : environment files for your project (secret information is store here)  
-tasks/ : specific tasks  
+- hosts-prod : contains your production server definition  
+- deploy.yml : template of ansistrano
+- etc/ : specific server config files to be place in your remote server  
+- config/ : environment files for your project (secret information is store here)  
+- tasks/ : specific tasks  
 
 All these files could be specific for staging.  
