@@ -1,8 +1,10 @@
 ---
 layout: post
+categories: php deploy ansible ansistrano
+date: 2017-07-16 23:00:00 +0200
+lang: en
+ref: 2017-07-16-ansistrano-deploy-php-apps
 title:  "Ansistrano Deployement"
-date:   2017-07-15 23:00:00 +0200
-categories: symfony packages
 ---
 
 Deploy PHP Apps with [Ansistrano](https://ansistrano.com/)
@@ -24,6 +26,16 @@ In /etc/ansible/ansible.cfg
 Update
 If you want to update the role, you need to pass --force parameter when installing. Please, check the following command:
 > $ ansible-galaxy install --force carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback
+
+# Ansible repository
+
+You could organize your deployment repository by company or by type of project.
+I call it "ansible" for example, with directory structure :
+
+apps/  
+base/  
+files/  
+README.md
 
 # Usage
 Install your project ("ansible" for example) from git in the user "deploy" home directory
@@ -118,13 +130,12 @@ Remotely :
 - Clean temporary files and warmup cache
 
 Sample with my web app
-
 ```
-/home/deploy/ansible/my-app.com
+/home/deploy/ansible/apps/my-app.com
 |-- hosts-prod
 |-- deploy.yml
-|-- etc
-|-- config
+|-- etc/
+|-- config/
 |-- tasks
 |   |-- before-code-update.yml
 |   |-- after-code-update.yml
@@ -133,3 +144,11 @@ Sample with my web app
 |   |-- before-cleanup.yml
 |   |-- after-cleanup.yml
 ```
+
+hosts-prod : contains your production server definition
+deploy.yml :
+etc/ : specific server config files to be place in your remote server
+config/ : environment files for your project (secret information is store here)
+tasks/ : specific tasks
+
+All these files could be specific for staging.  
