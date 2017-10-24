@@ -41,7 +41,7 @@ README.md
 Install your project ("ansible" for example) from git in the user "deploy" home directory
 
 Create the public key for the "deploy" user
-> $ ssh-keygen -t rsa
+> $ ssh-keygen -t rsa  
 > $ cp -v ~/.ssh/id_rsa.pub ~/ansible/files/authorized_keys.deploy.pub
 
 I have created to playbook to init remote host
