@@ -27,8 +27,8 @@ Update
 If you want to update the role, you need to pass --force parameter when installing. Please, check the following command:
 > $ ansible-galaxy install --force carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback
 
-# Ansible repository
 
+# Ansible repository
 You could organize your deployment repository by company or by type of project.
 I call it "ansible" for example, with directory structure :
 
