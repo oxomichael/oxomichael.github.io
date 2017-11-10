@@ -1,9 +1,9 @@
 ---
 layout: post
 categories: php zf1 composer
-date: 2015-09-15 11:00:00 +0200
+date: 2015-09-25 11:00:00 +0200
 lang: en
-ref: 2017-07-16-ansistrano-deploy-php-apps
+ref: 2015-09-25-zend-framework-1-composer
 title:  "Composer and Zend Framework version 1"
 ---
 
