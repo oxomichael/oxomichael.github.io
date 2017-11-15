@@ -7,9 +7,6 @@ ref: 2016-01-23-migrate-svn-to-git
 title:  "Migration SVN vers Git"
 ---
 
-Migration SVN vers Git
-Soumis par michael le sam, 23/01/2016 - 19:12
-
 Afin d'améliorer le processus de mise production, pour mon usage, il est intéressant de passer tous les projets sur Git.
 
 Bon on va commencer par consulter la doc officielle, https://git-scm.com/book/en/v2/Git-and-Other-Systems-Migrating-to-Git
@@ -34,7 +31,6 @@ $ git svn clone --prefix=origin/ --stdlayout http://[PATH SVN DU PROJET] --autho
 Cette opération va créer un repository local Git
 
 4. Nettoyage des références créer par la commande git-svn
-
 ```
 $ git for-each-ref refs/remotes/tags | cut -d / -f 4- | grep -v @ | while read tagname; do git tag "$tagname" "tags/$tagname"; git branch -r -d "tags/$tagname"; done
 
