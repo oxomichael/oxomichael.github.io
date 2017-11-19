@@ -4,7 +4,7 @@ categories: linux usb3 uasp
 date: 2016-03-02 21:55:00 +0200
 lang: fr
 ref: 2016-03-02-linux-usb3-uasp-disable
-title:  "Linux et USB3, D&sactivé le protocol UASP"
+title:  "Linux et USB3, Désactiver le protocol UASP"
 ---
 
 Après avoir acheter un joli ICY DOCK Black Vortex (MB174SU3S-4SB) pour pouvoir mettre 4 disques pour faire des sauvegardes, l'utilisation de rsync intensif provoque des ralentissements/déconnexion.
