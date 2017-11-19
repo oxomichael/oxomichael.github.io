@@ -10,7 +10,7 @@ title: "Convertir un clavier QWERTY (ANSI) en version AZERTY (ISO)"
 Acheter les autocollants puis les coller.
 Mais il vous manque les signes supérieur (>) et inférieur (<)
 
-## Windows
+## Windows
 
 Installer AutoHotKey (https://www.autohotkey.com)  
 Lire la documentation (je vous met tous ça là, quand même)
