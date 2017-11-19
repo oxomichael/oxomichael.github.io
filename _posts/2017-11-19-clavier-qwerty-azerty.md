@@ -54,7 +54,7 @@ générer un exécutable (Convert ahk to exe) pour l'ajouter au démarrage sous 
 
 ou Exécuter (shell:startup)
 
-Version anglaise : "C:\Users\*****\AppData\Roaming\Microsoft\Windows\ Start Menu\Programs\Startup"
+Version anglaise : "C:\Users\*****\AppData\Roaming\Microsoft\Windows\ Start Menu\Programs\Startup"  
 Version française : "C:\Utilisateurs\*****\AppData\Roaming\Microsoft\W indows\Menu Démarrer\Programmes\Démarrage"
 
 ## Linux
