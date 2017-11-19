@@ -34,7 +34,7 @@ Le format de l'option quirks est la suivante `quirks=<VID>:<PID>:u` ou <VID> = V
 
 Ensuite
 
-```
+```bash
 $ depmod -ae
 $ update-initramfs -u
 ```
