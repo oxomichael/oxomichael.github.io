@@ -88,15 +88,17 @@ xmodmap ~/.Xmodmap
 ```
 
 ### Xkb
-
-Sinon il y a aussi xkb
-```
-sudo nano /usr/share/X11/xkb/symbols/fr
-```
-Suppression du cache
+Sinon il y a aussi xkb, on commence par supprimer le cache
 ```
 rm -rf /var/lib/xkb/*
 ```
 
-### Wayland
-@todo
+On edite le fichier
+```
+sudo nano /usr/share/X11/xkb/symbols/fr
+```
+Mon clavier est en `French (Azerty)`, donc on cherche la section et on modifie :
+
+```
+key <AB01>  { [     w,              W,              less,   greater         ] };
+```
