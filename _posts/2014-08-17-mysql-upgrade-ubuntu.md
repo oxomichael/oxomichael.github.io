@@ -12,19 +12,25 @@ Mettre à jour Ubuntu (passer d'une version à une autre) et redémarrer MySQL..
 Pour faire simple et ne plus avoir de problème :
 Sauvegarder votre fichier de configuration mysql
 
-sudo cp /etc/mysql/my.cnf /etc/mysql/my.cnf.backup
+```bash
+$ sudo cp /etc/mysql/my.cnf /etc/mysql/my.cnf.backup
+```
 
 Modifier la configuration de Apparmor en ajoutant un fichier
 
-sudo nano /etc/apparmor.d/local/usr.sbin.mysqld
+```bash
+$ sudo nano /etc/apparmor.d/local/usr.sbin.mysqld
+```
 
 Ce qui ajoute un fichier spécifique pour la machine local contenant des paramètres supplémentaires, sans changer la configuration de base.
 Contenu du fichier :
 
+```
 # Site-specific additions and overrides for usr.sbin.mysqld.
 # For more details, please see /etc/apparmor.d/local/README.
 
 /dbs/mysql/ r,
 /dbs/mysql/** rwk
+```
 
 Et hop faire les mises à jour.

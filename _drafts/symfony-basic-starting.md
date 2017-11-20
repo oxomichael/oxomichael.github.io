@@ -7,13 +7,13 @@ categories: symfony packages
 
 Basic start of a symfony project (version 3.x)
 
-# Create your project
+## Create your project
 `$ composer create-project symfony/framework-standard-edition my_project_name`
 
 If you want to use an LTS version you can specify a version.
 `$ composer create-project symfony/framework-standard-edition my_project_name "2.8.*"`
 
-# Use Git to store your project
+## Use Git to store your project
 You can see a `.gitignore` file, open it to see which files of your project is ignore.
 
 Simply use these commands to make your initial commit
@@ -23,9 +23,9 @@ git add .
 git commit -m "Initial commit"
 ```
 
-# Apache with PHP-FPM
+## Apache with PHP-FPM
 
-## Sample configuration
+### Sample configuration
 ```
 <VirtualHost *:80>
 	ServerName symfony.local
@@ -68,7 +68,7 @@ git commit -m "Initial commit"
 </VirtualHost>
 ```
 
-## Production configuration
+### Production configuration
 But in order to use in a production server for better performance:
  - Disabling .htaccess support
  - Disabling other items
@@ -141,14 +141,14 @@ It's always interesting to use the same configuration in dev and in production.
 I prefer to not discover a configuration problem in production, so i always
 keep my dev environment as my production.
 
-# Specific development configuration
+## Specific development configuration
 
-I use vagrant or docker for dev environment so i have to tweek `app_dev.php`
-
-
+I use vagrant or docker for dev environment so i have to tweak `app_dev.php`
 
 
-# Frontend
+
+
+## Frontend
 
 Assetic
 composer require symfony/assetic-bundle
@@ -183,7 +183,7 @@ Redis Session Handler
 
 Monolog
 
-# Backend
+## Backend
 
 HWIOAuthBundle
 
