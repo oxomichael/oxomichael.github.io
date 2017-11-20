@@ -2,7 +2,7 @@
 layout: post
 categories: apache2 php-fpm
 date: 2016-06-28 21:00:00 +0200
-lang: en
+lang: fr
 ref: 2016-06-28-apache-proxy-fcgi-php
 title:  "Apache2, PHP-FPM"
 ---
