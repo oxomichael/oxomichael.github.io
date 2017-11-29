@@ -8,6 +8,8 @@ title: "My Dev Docker Compose File"
 ---
 
 ## Use docker to compose your dev environment
+Working with Apache, PHP, MariaDB, ...
+
 Here is my sample compose file
 
 ```
@@ -80,6 +82,9 @@ networks:
       gateway: 172.10.0.1
 
 ```
+### How to use it
+
+
 ### TODO
 - Add webpack-dev-server container
 
@@ -111,3 +116,7 @@ chmod +x /usr/local/bin/docker-compose
 
 ## Docker file - on the web
 - [MailDev](https://github.com/djfarrelly/MailDev)
+
+
+## Monitor
+- [Ctop](https://github.com/bcicen/ctop)
