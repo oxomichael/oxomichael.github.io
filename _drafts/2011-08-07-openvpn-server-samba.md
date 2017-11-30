@@ -104,6 +104,15 @@ iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 
 Cette commande fera que le trafic IP sortant du sous-réseau 10.8.0.0/24 vers l’extérieure pourra revenir routé vers le VPN avec la bonne destination.
 
+/etc/network/interfaces
+iface eth0 inet static
+  ...
+  post-up /sbin/iptables -t nat -A POSTROUTING -s 10.8.37.0/24 -o eth0 -j MASQUERADE
+
+/etc/network/if-up.d/iptables
+#!/bin/sh
+iptables -t nat -A POSTROUTING -s 10.8.250.0/24 -o eth0 -j MASQUERADE
+
 Ne pas oublier de redémarrer OpenVPN
 
 /etc/init.d/openvpn restart
