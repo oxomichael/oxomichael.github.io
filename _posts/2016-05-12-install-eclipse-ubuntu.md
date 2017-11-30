@@ -1,7 +1,7 @@
 ---
 layout: post
 categories: linux ubuntu eclipse
-date: 2014-08-17 11:00:00 +0200
+date: 2016-05-12 11:00:00 +0200
 lang: en
 ref: 2016-05-12-install-eclipse-ubuntu
 title:  "Install Eclipse on Ubuntu"
