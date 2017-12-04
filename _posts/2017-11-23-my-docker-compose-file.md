@@ -83,7 +83,7 @@ networks:
 
 ```
 ### How to use it
-
+TODO
 
 ### TODO
 - Add webpack-dev-server container
@@ -111,12 +111,8 @@ curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compos
 chmod +x /usr/local/bin/docker-compose
 ```
 
-## My Specific docker file
-
-
-## Docker file - on the web
-- [MailDev](https://github.com/djfarrelly/MailDev)
-
+## My Docker files
+See all my docker files : https://github.com/oxomichael/envdev-dockerfiles
 
 ## Monitor
 - [Ctop](https://github.com/bcicen/ctop)
