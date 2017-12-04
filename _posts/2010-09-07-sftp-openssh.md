@@ -41,7 +41,7 @@ $ chown user:sftp -R /home/{username}
 $ chown {username}:{username} /home/{username}/recv
 $ chown {username}:{username} /home/{username}/send
 $ chmod 755 /home/sftp/{username}/recv
-$ chmod 755   /home/sftp/{username}/send
+$ chmod 755 /home/sftp/{username}/send
 ```
 
 Attention : il faut respecter les permissions suivantes pour la sécurité et il est impossible d'écrire dans le répertoire parent
