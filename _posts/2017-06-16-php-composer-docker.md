@@ -7,8 +7,6 @@ ref: 2017-06-16-php-composer-docker
 title: "PHP : Composer in docker"
 ---
 
-## PHP : Composer in docker
-
 Si vous développer en PHP avec tout votre environnement local de développement
 en docker, alors vous voudriez bien aussi utilisez les bonnes pratiques de
 docker et placer Composer dans un container.
