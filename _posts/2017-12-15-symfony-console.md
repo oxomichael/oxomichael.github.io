@@ -322,5 +322,36 @@ See the (documentation)[https://symfony.com/doc/3.4/console.html]
 > You can also manually register your command as a service by configuring the service and tagging it with console.command.
 
 @todo  
-`symfony/dependency-injection`
+```
+symfony/dependency-injection
+symfony/config  
+symfony/yaml
+```  
 https://symfony.com/doc/3.4/components/dependency_injection.html
+
+Create a `bootstrap.php` file  
+....
+
+Change `console` file
+
+```php
+#!/usr/bin/env php
+
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/* @var ContainerInterface $container */
+/* @var CommandLoaderInterface $commandLoader */
+
+$container = require __DIR__ . '/bootstrap.php';
+$commandLoader = $container->get('console.command_loader');
+
+$app = new Application();
+$app->setCommandLoader($commandLoader);
+$app->run();
+```
