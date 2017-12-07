@@ -355,3 +355,7 @@ $app = new Application();
 $app->setCommandLoader($commandLoader);
 $app->run();
 ```
+
+Symfony 3.4, Symfony 4.0, and Symfony Flex  
+composer create-project symfony/skeleton console2
+composer req orm
