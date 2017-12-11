@@ -1,9 +1,9 @@
 ---
 layout: post
 categories: php symfony console
-date: 2017-12-15 23:00:00 +0200
+date: 2017-12-10 23:00:00 +0200
 lang: fr
-ref: 2017-12-15-symfony-console
+ref: 2017-12-10-symfony-console
 title: "Symfony Console"
 ---
 
