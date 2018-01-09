@@ -21,7 +21,5 @@ Install version 3.4 LTS
 Get your needed [pack](https://github.com/symfony?q=pack)
 
 ```
-composer require symfony/profiler-pack \
-  symfony/debug-pack \
-  
+composer require symfony/profiler-pack symfony/debug-pack
 ```

@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Symfony basic starting"
+title:  "Symfony basic start"
 date:   2017-07-15 23:00:00 +0200
-categories: symfony packages
+categories: php symfony packages
 ---
 
 Basic start of a symfony project (version 3.x)
@@ -150,34 +150,33 @@ I use vagrant or docker for dev environment so i have to tweak `app_dev.php`
 
 ## Frontend
 
-Assetic
-composer require symfony/assetic-bundle
+### Assetic
+`composer require symfony/assetic-bundle`
 => https://symfony.com/doc/current/assetic/asset_management.html
 
-JQuery
+### JQuery
+```
 composer require components/jquery
 composer require components/jqueryui
+```
 
-Bootstrap
-composer require twbs/bootstrap
+### Bootstrap
+`composer require twbs/bootstrap`
 
-FontAwesome
-composer require fortawesome/font-awesome
+### FontAwesome
+`composer require fortawesome/font-awesome`
 
-
-kriswallsmith/assetic suggests installing leafo/lessphp (Assetic provides the integration with the lessphp LESS compiler)
-kriswallsmith/assetic suggests installing leafo/scssphp (Assetic provides the integration with the scssphp SCSS compiler)
-kriswallsmith/assetic suggests installing ptachoire/cssembed (Assetic provides the integration with phpcssembed to embed data uris)
-kriswallsmith/assetic suggests installing leafo/scssphp-compass (Assetic provides the integration with the SCSS compass plugin)
-kriswallsmith/assetic suggests installing patchwork/jsqueeze (Assetic provides the integration with the JSqueeze JavaScript compressor)
-symfony/assetic-bundle suggests installing kriswallsmith/spork (to be able to dump assets in parallel)
-
-Dev
+## Dev
+```
 php bin/console assets:install --symlink
 php bin/console assetic:dump
-Prod
+```
+
+## Prod
+```
 php bin/console assets:install --symlink --env prod
 php app/console assetic:dump --env prod
+```
 
 Redis Session Handler
 
