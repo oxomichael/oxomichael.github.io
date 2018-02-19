@@ -26,4 +26,4 @@ plugins:
 # Piwik
 piwik:
  base_url: m.mstash.net
- site_id: 2
+ site_id: 1
