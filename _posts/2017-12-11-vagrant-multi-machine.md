@@ -42,7 +42,7 @@ Vagrant.configure("2") do |config|
 			vb.customize ["modifyvm", :id, "--memory", "512"]
 			vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 			vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-  	end
+	  	end
 	end
 	# DB
 	config.vm.define "db" do |db|
@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
 			vb.customize ["modifyvm", :id, "--memory", "512"]
 			vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 			vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-  	end
+  		end
 	end
 end
 ```
