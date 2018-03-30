@@ -25,34 +25,34 @@ I choose to use Apache with php-fpm.
 
 	DocumentRoot /var/www/project/web
 	<Directory /var/www/project/web/>
-	  Options FollowSymLinks Indexes
-    AllowOverride all
-    Require all granted
-  </Directory>
+		Options FollowSymLinks Indexes
+		AllowOverride all
+		Require all granted
+	</Directory>
 
 	# Redirect to local php-fpm if mod_php is not available
 	<IfModule !mod_php7.c>
-  	<IfModule proxy_fcgi_module>
-      # Enable http authorization headers
-      <IfModule setenvif_module>
-      SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
-    </IfModule>
+	<IfModule proxy_fcgi_module>
+		# Enable http authorization headers
+		<IfModule setenvif_module>
+			SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
+		</IfModule>
 
-    <FilesMatch ".+\.ph(p[3457]?|t|tml)$">
-  		#SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
-  		SetHandler "proxy:fcgi://fpm70:9000"
-    </FilesMatch>
-    <FilesMatch ".+\.phps$">
-  		# Deny access to raw php sources by default
-  		# To re-enable it's recommended to enable access to the files
-  		# only in specific virtual host or directory
-  		Require all denied
-    </FilesMatch>
-    # Deny access to files without filename (e.g. '.php')
-    <FilesMatch "^\.ph(p[3457]?|t|tml|ps)$">
-  		Require all denied
-    </FilesMatch>
-  	</IfModule>
+		<FilesMatch ".+\.ph(p[3457]?|t|tml)$">
+			#SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
+			SetHandler "proxy:fcgi://fpm70:9000"
+		</FilesMatch>
+		<FilesMatch ".+\.phps$">
+			# Deny access to raw php sources by default
+			# To re-enable it's recommended to enable access to the files
+			# only in specific virtual host or directory
+			Require all denied
+		</FilesMatch>
+		# Deny access to files without filename (e.g. '.php')
+		<FilesMatch "^\.ph(p[3457]?|t|tml|ps)$">
+			Require all denied
+		</FilesMatch>
+	</IfModule>
 	</IfModule>
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -73,17 +73,16 @@ But in order to use in a production server for better performance:
 
 	DocumentRoot /var/www/project/web
 	<Directory /var/www/project/web/>
-    AllowOverride None
-    Order Allow,Deny
-    Allow from All
-
-    <IfModule mod_rewrite.c>
-        Options -MultiViews
-        RewriteEngine On
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteRule ^(.*)$ app.php [QSA,L]
-    </IfModule>
-  </Directory>
+		AllowOverride None
+		Order Allow,Deny
+		Allow from All
+		<IfModule mod_rewrite.c>
+			Options -MultiViews
+			RewriteEngine On
+			RewriteCond %{REQUEST_FILENAME} !-f
+			RewriteRule ^(.*)$ app.php [QSA,L]
+		</IfModule>
+	</Directory>
 
   # uncomment the following lines if you install assets as symlinks
   # or run into problems when compiling LESS/Sass/CoffeeScript assets
@@ -112,17 +111,17 @@ But in order to use in a production server for better performance:
   		#SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
   		SetHandler "proxy:fcgi://fpm70:9000"
     </FilesMatch>
-    <FilesMatch ".+\.phps$">
-  		# Deny access to raw php sources by default
-  		# To re-enable it's recommended to enable access to the files
-  		# only in specific virtual host or directory
-  		Require all denied
-    </FilesMatch>
-    # Deny access to files without filename (e.g. '.php')
-    <FilesMatch "^\.ph(p[3457]?|t|tml|ps)$">
-  		Require all denied
-    </FilesMatch>
-  	</IfModule>
+	<FilesMatch ".+\.phps$">
+		# Deny access to raw php sources by default
+		# To re-enable it's recommended to enable access to the files
+		# only in specific virtual host or directory
+		Require all denied
+	</FilesMatch>
+	# Deny access to files without filename (e.g. '.php')
+	<FilesMatch "^\.ph(p[3457]?|t|tml|ps)$">
+		Require all denied
+	</FilesMatch>
+	</IfModule>
 	</IfModule>
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
