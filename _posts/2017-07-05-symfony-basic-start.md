@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Symfony basic start"
-date:   2017-07-15 23:00:00 +0200
+date:   2017-07-05 23:00:00 +0200
 categories: php symfony packages
 ---
 
@@ -33,33 +33,32 @@ git commit -m "Initial commit"
 
 	DocumentRoot /var/www/project/web
 	<Directory /var/www/project/web/>
-	  Options FollowSymLinks Indexes
-    AllowOverride all
-    Require all granted
-  </Directory>
+		Options FollowSymLinks Indexes
+		AllowOverride all
+		Require all granted
+	</Directory>
 
 	# Redirect to local php-fpm if mod_php is not available
 	<IfModule !mod_php7.c>
   	<IfModule proxy_fcgi_module>
-      # Enable http authorization headers
-      <IfModule setenvif_module>
-      SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
-    </IfModule>
-
-    <FilesMatch ".+\.ph(p[3457]?|t|tml)$">
+	# Enable http authorization headers
+      	<IfModule setenvif_module>
+		SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
+	</IfModule>
+	<FilesMatch ".+\.ph(p[3457]?|t|tml)$">
   		#SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
   		SetHandler "proxy:fcgi://fpm70:9000"
-    </FilesMatch>
-    <FilesMatch ".+\.phps$">
-  		# Deny access to raw php sources by default
-  		# To re-enable it's recommended to enable access to the files
-  		# only in specific virtual host or directory
+	</FilesMatch>
+	<FilesMatch ".+\.phps$">
+		# Deny access to raw php sources by default
+		# To re-enable it's recommended to enable access to the files
+		# only in specific virtual host or directory
+		Require all denied
+	</FilesMatch>
+	# Deny access to files without filename (e.g. '.php')
+	<FilesMatch "^\.ph(p[3457]?|t|tml|ps)$">
   		Require all denied
-    </FilesMatch>
-    # Deny access to files without filename (e.g. '.php')
-    <FilesMatch "^\.ph(p[3457]?|t|tml|ps)$">
-  		Require all denied
-    </FilesMatch>
+	</FilesMatch>
   	</IfModule>
 	</IfModule>
 
