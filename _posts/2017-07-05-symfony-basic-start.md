@@ -3,6 +3,7 @@ layout: post
 title:  "Symfony basic start"
 date:   2017-07-05 23:00:00 +0200
 categories: php symfony packages
+ref: 2017-07-05-symfony-basic-start
 ---
 
 Basic start of a symfony project (version 3.x)
@@ -79,32 +80,32 @@ But in order to use in a production server for better performance:
 
 	DocumentRoot /var/www/project/web
 	<Directory /var/www/project/web/>
-    AllowOverride None
-    Order Allow,Deny
-    Allow from All
+    	AllowOverride None
+		Order Allow,Deny
+		Allow from All
 
-    <IfModule mod_rewrite.c>
-        Options -MultiViews
-        RewriteEngine On
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteRule ^(.*)$ app.php [QSA,L]
-    </IfModule>
-  </Directory>
+		<IfModule mod_rewrite.c>
+			Options -MultiViews
+			RewriteEngine On
+			RewriteCond %{REQUEST_FILENAME} !-f
+			RewriteRule ^(.*)$ app.php [QSA,L]
+		</IfModule>
+	</Directory>
 
-  # uncomment the following lines if you install assets as symlinks
-  # or run into problems when compiling LESS/Sass/CoffeeScript assets
-  # <Directory /var/www/project>
-  #     Options FollowSymlinks
-  # </Directory>
+	# uncomment the following lines if you install assets as symlinks
+	# or run into problems when compiling LESS/Sass/CoffeeScript assets
+	# <Directory /var/www/project>
+	#     Options FollowSymlinks
+	# </Directory>
 
-  # optionally disable the RewriteEngine for the asset directories
-  # which will allow apache to simply reply with a 404 when files are
-  # not found instead of passing the request into the full symfony stack
-  <Directory /var/www/project/web/bundles>
-      <IfModule mod_rewrite.c>
-          RewriteEngine Off
-      </IfModule>
-  </Directory>
+	# optionally disable the RewriteEngine for the asset directories
+	# which will allow apache to simply reply with a 404 when files are
+	# not found instead of passing the request into the full symfony stack
+	<Directory /var/www/project/web/bundles>
+		<IfModule mod_rewrite.c>
+			RewriteEngine Off
+		</IfModule>
+	</Directory>
 
 	# Redirect to local php-fpm if mod_php is not available
 	<IfModule !mod_php7.c>
