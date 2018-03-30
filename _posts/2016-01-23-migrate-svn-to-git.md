@@ -33,9 +33,7 @@ Cette opération va créer un repository local Git
 4. Nettoyage des références créer par la commande git-svn
 ```
 $ git for-each-ref refs/remotes/tags | cut -d / -f 4- | grep -v @ | while read tagname; do git tag "$tagname" "tags/$tagname"; git branch -r -d "tags/$tagname"; done
-
 $ git for-each-ref refs/remotes | cut -d / -f 3- | grep -v @ | while read branchname; do git branch "$branchname" "refs/remotes/$branchname"; git branch -r -d "$branchname"; done
-
 $ cp -Rfv .git/refs/remotes/origin/tags/* .git/refs/tags/
 $ rm -Rfv .git/refs/remotes/origin/tags
 $ cp -Rfv .git/refs/remotes/* .git/refs/heads/
