@@ -11,7 +11,7 @@ Si vous développer en PHP avec tout votre environnement local de développement
 en docker, alors vous voudriez bien aussi utilisez les bonnes pratiques de
 docker et placer Composer dans un container.
 
-Pour ce faire, il existe donc l'image officiel de Composer sur le hub de docker (https://hub.docker.com/_/composer/).
+Pour ce faire, il existe donc l'image officiel de Composer sur le [hub de docker](https://hub.docker.com/_/composer/).
 
 Voilà comment, je l'utilise :
 
