@@ -3,6 +3,10 @@ languageCode: en-us
 title: Linux and PHP Ecosystem Adventures
 theme: ["PaperMod"]
 
+caches:
+  images:
+    dir: :cacheDir/images
+
 pagination:
   disableAliases: false
   pagerSize: 10
