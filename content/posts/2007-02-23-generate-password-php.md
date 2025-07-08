@@ -4,6 +4,11 @@ date: '2007-02-23T11:00:00+02:00'
 draft: false
 ---
 
+> **Note de mise à jour (Juillet 2025) :** Cet article est conservé pour l'archive. Les méthodes présentées ici (`rand()`, `srand()`) ne sont plus considérées comme sécurisées. Pour une approche moderne et sûre, veuillez consulter la version mise à jour de cet article :
+> **[Générer un mot de passe sécurisé en PHP (Version 2025)](/posts/2025-07-08-generer-mot-de-passe-securise-php)**
+
+---
+
 La sécurisation d'un mot de passe dépend du nombre de caractères différents présent dans celui-ci.
 Voici une solution pour rendre les mots de passe sécurisé lors de leur génération:
 code :
