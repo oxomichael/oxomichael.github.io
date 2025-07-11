@@ -1,7 +1,50 @@
 baseURL: https://oxomichael.github.io/
-languageCode: en-us
-title: Linux and PHP Ecosystem Adventures
 theme: ["PaperMod"]
+defaultContentLanguage: fr
+
+languages:
+  fr:
+    contentDir: content/fr
+    languageCode: fr-fr
+    languageName: Français
+    weight: 1
+    title: Aventures dans l'écosystème Linux et PHP
+    params:
+      description: "Aventures dans l'écosystème Linux et PHP"
+      homeInfoParams:
+        Title: Astuces, conseils et veille sur l'écosystème du développement
+        Content: Par un développeur en France
+    menu:
+      main:
+        - identifier: search_fr
+          name: Recherche
+          url: /search/
+          weight: 10
+        - identifier: about_fr
+          name: A propos
+          url: /about/
+          weight: 20
+  en:
+    contentDir: content/en
+    languageCode: en-us
+    languageName: English
+    weight: 2
+    title: Linux and PHP Ecosystem Adventures
+    params:
+      description: "Linux and PHP Ecosystem Adventures"
+      homeInfoParams:
+        Title: Development Tips, Tricks & Ecosystem Insights
+        Content: By a developer located in France
+    menu:
+      main:
+        - identifier: search_en
+          name: Search
+          url: /search/
+          weight: 10
+        - identifier: about_en
+          name: About
+          url: /about/
+          weight: 20
 
 caches:
   images:
@@ -29,13 +72,10 @@ outputs:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: Linux and PHP Ecosystem Adventures
-  description: "Linux and PHP Ecosystem Adventures"
   keywords: [Blog, PHP, Linux]
   author: oxomichael
   defaultTheme: auto # dark, light
   disableThemeToggle: false
-
   ShowReadingTime: true
   ShowShareButtons: true
   ShowPostNavLinks: true
@@ -52,6 +92,9 @@ params:
   showtoc: false
   tocopen: false
 
+  # Add this to enable the language switcher
+  showLanguageSwitcher: true
+
   # Analytics
   analytics:
     google:
@@ -61,10 +104,6 @@ params:
     matomo:
       url: "https://m.mstash.net/"
       siteId: 1
-
-  homeInfoParams:
-    Title: Development Tips, Tricks & Ecosystem Insights
-    Content: By a developer located in France
 
   socialIcons:
     - name: email
@@ -85,13 +124,3 @@ params:
     minMatchCharLength: 0
     limit: 10 # refer: https://www.fusejs.io/api/methods.html#search
     keys: ["title", "permalink", "summary", "content"]
-menu:
-  main:
-    - identifier: search
-      name: Search
-      url: /search/
-      weight: 10
-    - identifier: about
-      name: About
-      url: /About/
-      weight: 20
