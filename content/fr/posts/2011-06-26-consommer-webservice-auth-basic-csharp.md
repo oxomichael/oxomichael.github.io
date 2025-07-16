@@ -1,52 +1,86 @@
 ---
 translationKey: "2011-06-26-consommer-webservice-auth-basic-csharp"
-categories: php soap csharp
+categories: ["csharp", "soap", "dotnet"]
 date: "2011-06-26T11:00:00Z"
-ref: 2011-06-26-consommer-webservice-auth-basic-csharp
-title: Consommer WebService Auth Basic avec C#
+title: "Consommer un Web Service SOAP avec Authentification Basique en C#"
 ---
 
-J'ai du valider différents clients pour se connecter à un webservice (SOAP 1.2) réaliser en PHP avec une authentification basique.
-Mais il semble que DotNet n'est pas prévu d'utiliser cette méthode d'authentification pour se connecter.
-Donc on ouvre VisualStudio et on générer une référence de service web....
+Interagir avec des services web SOAP, par exemple ceux développés en PHP, depuis une application .NET est une tâche courante. Lorsque ces services sont protégés par une **authentification HTTP basique (Basic Auth)**, la configuration du client C# nécessite une petite étape supplémentaire, mais elle est plus simple qu'il n'y paraît.
 
-On ouvre le fichier contenant le code de la référence web, un fichier Reference.cs. Et on ajoute cette méthode :
+Ce guide montre la méthode standard et recommandée pour consommer un web service SOAP sécurisé avec Basic Auth en utilisant C#.
+
+## Le défi : l'authentification basique
+
+Lors de l'ajout d'une "Référence de service" à un projet Visual Studio pour un web service SOAP, le client généré ne gère pas automatiquement l'envoi des informations d'authentification. Si vous essayez d'appeler une méthode du service directement, vous obtiendrez probablement une erreur `(401) Unauthorized`.
+
+La solution consiste à fournir explicitement les informations d'identification (login et mot de passe) à l'instance du client de service.
+
+## La méthode standard et recommandée
+
+La classe de base pour les clients de service générés (`System.Web.Services.Protocols.SoapHttpClientProtocol`) possède une propriété `Credentials` conçue exactement pour ce scénario.
+
+Voici comment l'utiliser :
+
+```csharp
+// 1. Instanciez le client de service généré par Visual Studio
+var service = new My.Web.Service();
+
+// 2. Créez un objet NetworkCredential avec votre login et mot de passe
+var credentials = new System.Net.NetworkCredential("VOTRE_LOGIN", "VOTRE_MOT_DE_PASSE");
+
+// 3. Assignez cet objet à la propriété Credentials du service
+// C'est cette étape qui indique à .NET d'utiliser l'authentification basique
+service.Credentials = credentials;
+
+// 4. (Optionnel mais recommandé) Activez la pré-authentification
+// Cela envoie l'en-tête "Authorization" dès la première requête,
+// évitant ainsi un aller-retour inutile (challenge 401 puis requête authentifiée).
+service.PreAuthenticate = true;
+
+// 5. Appelez votre méthode de service web
+// La requête HTTP inclura désormais l'en-tête d'authentification requis.
+var result = service.Method();
 ```
+
+Cette approche est propre, simple et ne nécessite aucune modification du code généré (`Reference.cs`). Elle est donc robuste aux mises à jour de la référence de service.
+
+## Ancienne approche : Surcharger `GetWebRequest` (Non recommandé)
+
+Une autre méthode, parfois rencontrée dans d'anciens projets, consiste à modifier directement le fichier `Reference.cs` pour surcharger la méthode `GetWebRequest`. **Cette approche n'est pas recommandée** car toute mise à jour de la référence de service écrasera vos modifications.
+
+Elle consistait à ajouter manuellement l'en-tête `Authorization`. Si vous la rencontrez, voici à quoi elle ressemble (avec les corrections nécessaires) :
+
+```csharp
+// Dans le fichier Reference.cs, à l'intérieur de la classe du client de service...
 protected override System.Net.WebRequest GetWebRequest(Uri uri)
 {
-  request = (HttpWebRequest)base.GetWebRequest(uri);
-  HttpWebRequest request;
+    // Récupère la requête web de base
+    HttpWebRequest request = (HttpWebRequest)base.GetWebRequest(uri);
 
-  if (PreAuthenticate) {
-    NetworkCredential networkCredentials = Credentials.GetCredential(uri, "Basic");
-    if (networkCredentials != null) {
-      byte[] credentialBuffer = new UTF8Encoding().GetBytes(networkCredentials.UserName + ":" + networkCredentials.Password);
-      request.Headers["Authorization"] = "Basic " + Convert.ToBase64String(credentialBuffer);
-    } else {
-      throw new ApplicationException(“No network credentials”);
+    // Si la pré-authentification est activée, on construit l'en-tête manuellement
+    if (this.PreAuthenticate)
+    {
+        NetworkCredential nc = this.Credentials.GetCredential(uri, "Basic");
+        if (nc != null)
+        {
+            byte[] credentialBuffer = new System.Text.UTF8Encoding().GetBytes(nc.UserName + ":" + nc.Password);
+            request.Headers["Authorization"] = "Basic " + Convert.ToBase64String(credentialBuffer);
+        }
     }
-  }
 
-  return request;
+    return request;
 }
 ```
+Cette méthode est plus complexe et fragile que l'utilisation directe de la propriété `Credentials`.
 
-On surcharge donc la méthode GetWebRequest() de la classe System.Web.Services.Protocols.SoapHttpClientProtocol.
-Le problème de cette méthode est que à chaque mise à jour de la référence, le code ajouté est donc supprimer. Il existe certainement une méthode pour faire autrement mais je ne suis pas un expert en C#.
+## Vérification de la requête
 
-Ensuite pour utiliser le code, cela reste très simple.
-```
-My.Web.Service service = new My.Web.Service();
-NetworkCredential netCredential = new NetworkCredential("LOGIN", "PASSWORD");
-Uri uri = new Uri(service.Url);
-ICredentials credentials = netCredential.GetCredential(uri, "Basic");
-service.Credentials = credentials;
-service.PreAuthenticate = true;
-service.Method();
+Pour confirmer que l'authentification fonctionne, vous pouvez utiliser un outil d'analyse de trafic HTTP comme [Fiddler](https://www.telerik.com/fiddler) ou Wireshark. En inspectant la requête sortante, vous devriez voir un en-tête HTTP qui ressemble à ceci :
+
+```http
+Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
 ```
 
-Et maintenant avec un logiciel tel que wireshark ou un analyser (Fiddler) de requette HTTP, vous devriez avoir une ligne dans les headers HTTP, du genre :
+La chaîne de caractères après `Basic` est votre `login:motdepasse` encodé en Base64.
 
-`Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==`
-
-Pour référence, voir ici : http://en.wikipedia.org/wiki/Basic_access_authentication
+Pour en savoir plus sur le fonctionnement de cette authentification, consultez la [page Wikipédia sur l'authentification HTTP basique](http://fr.wikipedia.org/wiki/Authentification_HTTP#Authentification_basique).
