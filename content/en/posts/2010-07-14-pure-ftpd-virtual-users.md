@@ -1,47 +1,97 @@
 ---
 translationKey: "2010-07-14-pure-ftpd-virtual-users"
-categories: linux pureftpd
+title: "Pure-FTPd and Virtual Users"
 date: "2010-07-14T11:00:00Z"
-ref: 2010-07-14-pureftpd-virtual-users
-title: PureFTPd et utilisateurs virtuels
 ---
 
-## Fichier de configuration des utilisateurs virtuels
+Pure-FTPd is a secure and easy-to-configure FTP server. One of its most useful features is the management of **virtual users**. Unlike system users, virtual users exist only for the FTP service. They are stored in a dedicated database, which avoids creating real accounts on the operating system, thereby improving security.
+
+This guide will show you how to configure Pure-FTPd to use a virtual user database.
+
+## 1. Virtual User Files
+
+The configuration of virtual users relies on two main files, usually located in `/etc/pure-ftpd/`:
+
+-   `pureftpd.passwd`: A text file containing user information in a readable format. You can edit this file manually if needed.
+-   `pureftpd.pdb`: The binary database generated from the `pureftpd.passwd` file. This is the file Pure-FTPd uses to authenticate users.
+
+It is advisable to back up these two files regularly.
+
+## 2. Configuring Pure-FTPd
+
+Pure-FTPd is configured via individual files in the `/etc/pure-ftpd/conf/` directory. Each file represents a configuration option.
+
+For example, to chroot all users (confining them to their home directory), you create a `ChrootEveryone` file with the value `yes`.
+
+```bash
+echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
 ```
-pureftpd.passwd
-pureftpd.pdb
+
+This method adds the `-A` parameter to the Pure-FTPd startup command after reloading. To discover all available options, consult the manual:
+
+```bash
+man pure-ftpd-wrapper
 ```
-Remarque : Utiliser la sauvegarde de ces fichiers, ils sont à placer dans `/etc/pure-ftpd/`
 
-## Configuration de pure-ftpd
-Pour chaque options de configuration,il suffit de créer un fichier portant le nom de la variable de configuration et en placeur la valeur sur la première ligne de ce fichier.
+Pay attention to case sensitivity when creating configuration files.
 
-Par exemple, en créant le fichier `/etc/pure-ftpd/conf/ChrootEveryone` et en mettant "yes" sur sa première ligne, cela permet de "Chrooter" les utilisateurs. Pour info, cela ajoutera le paramètre "-A" sur la ligne de commandes après avoir rechargé la configuration.
+## 3. Managing Virtual Users
 
-> $ echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
+The `pure-pw` command is the primary tool for managing virtual users.
 
-Pour avoir la liste des fichiers de configuration qu’il est possible de créer ou de modifier et la syntaxe pour les renseigner, il faut faire "man pure-ftpd-wrapper". Il faut faire attention à la casse des caractères lors de la création des fichiers.
-Création et gestion des utilisateurs virtuels
+### Create a User
 
-Création d'un utilisateur virtuel :
-> $ pure-pw useradd toto -u ftpuser -d /LeDossierDeToto
+To add a new user:
 
-Remarque : Le dossier "LeDossierDeToto" indiqué sera créé automatiquement à la première connexion si le fichier `/etc/pure-ftpd/conf/CreateHomeDir` contient "yes"
-
-Changer le mot de passe:
-`pure-pw passwd toto`
-
-Modifier un utilisateur:
-`pure-pw usermod toto -d /UnautreDossierPourToto`
-
-Il est possible également de modifier directement le fichier `/etc/pure-ftpd/pureftpd.passwd`
-ATTENTION : Après chaque création ou modification d’un utilisateur, il faut générer la base de données avec la commande suivante:
-> $ pure-pw mkdb
-
-Pour finir, il faut créer un lien symbolique pour activer l’authentification des utilisateurs virtuels:
+```bash
+pure-pw useradd my_user -u ftpuser -d /home/ftp/my_user
 ```
+
+-   `my_user`: The name of the virtual user.
+-   `-u ftpuser`: Associates the virtual user with a real system user (`ftpuser` in this example). Uploaded files will belong to `ftpuser`.
+-   `-d /home/ftp/my_user`: The user's home directory.
+
+**Note**: For the home directory to be created automatically on the first login, ensure the `/etc/pure-ftpd/conf/CreateHomeDir` file contains `yes`.
+
+### Modify a User
+
+To change the password:
+
+```bash
+pure-pw passwd my_user
+```
+
+To modify a user's information (e.g., their directory):
+
+```bash
+pure-pw usermod my_user -d /home/ftp/another_folder
+```
+
+### Update the Database
+
+**Important**: After each user addition or modification with `pure-pw` (or by editing `pureftpd.passwd`), you must update the `.pdb` database:
+
+```bash
+pure-pw mkdb
+```
+
+## 4. Enable Database Authentication
+
+For Pure-FTPd to use our virtual user database, we need to enable the `PureDB` authentication method. This is done by creating a symbolic link in the `/etc/pure-ftpd/auth/` directory.
+
+```bash
 cd /etc/pure-ftpd/auth/
 ln -s ../conf/PureDB 50puredb
 ```
 
-Remarque : Le dossier `/etc/pure-ftpd/auth/` contient un lien symbolique pour chaque méthode d'authentification acceptée. Pour désactiver l’accès FTP aux comptes du système Linux, il faut mettre "no" dans le fichier `/etc/pure-ftpd/conf/PAMAuthentication` et recharger la configuration
+The name `50puredb` defines the priority order. Lower numbers are checked first.
+
+## 5. Disable Other Authentications (Optional)
+
+To enhance security, it is recommended to disable other authentication methods, such as system user authentication via PAM. To do this, modify the corresponding configuration file:
+
+```bash
+echo "no" > /etc/pure-ftpd/conf/PAMAuthentication
+```
+
+Don't forget to reload the Pure-FTPd configuration for the changes to take effect. The method varies depending on your system (e.g., `service pure-ftpd restart` or `systemctl restart pure-ftpd`).
