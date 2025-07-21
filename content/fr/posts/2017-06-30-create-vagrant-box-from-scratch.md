@@ -3,75 +3,75 @@ translationKey: "2017-06-30-create-vagrant-box-from-scratch"
 categories: vagrant debian
 date: "2017-06-30T21:07:00Z"
 ref: 2017-06-30-create-vagrant-box-from-scratch
-title: Create a vagrant box from scratch
+title: Créer une box Vagrant à partir de zéro
 ---
 
 ## Box Debian Stretch 64
 
-* Install VirtualBox
-* Install Vagrant
-* Download the debian net install CD
-* Create virtual machine
+*   Installer VirtualBox
+*   Installer Vagrant
+*   Télécharger le CD d'installation réseau Debian
+*   Créer la machine virtuelle
 
-### Virtual Machine
+### Machine Virtuelle
 
-#### Hardware
-* Name: vagrant-stetch64
-* Type: Linux
-* Version: vagrant-stretch64
-* Memory Size : 512MB
-* New Virtual Disk:
-  * Type: VMDK
-  * Size: 8GB
- * Disable audio
- * DIsable USB
- * Mount ISO CD
+#### Matériel
+*   Nom : vagrant-stretch64
+*   Type : Linux
+*   Version : vagrant-stretch64
+*   Taille mémoire : 512Mo
+*   Nouveau disque virtuel :
+    *   Type : VMDK
+    *   Taille : 8Go
+*   Désactiver l'audio
+*   Désactiver l'USB
+*   Monter l'ISO du CD
 
 #### Installation
-Choose Graphical Install
-* Select a language
-* Select your location
-* Configure locales
-* Configure the keyboard
-* Configure the network
-  * Hostname : stretch64
-* Set up users and passwords
-  * Enter "vagrant" as root password
-  * Enter "vagrant" as fullname
-  * New user as "vagrant"
-  * and also "vagrant" as password
-* Configure the clock
-* Partition disks
- * Guided - use entire disks
- * Just let SCSIl (0, 0, 0) (sda) - 8.6 GB ATA VBOX HARDDISK as preselected and continue.
- * All files in one partition
- * Let's Finish partitioning and write changes to disk.
-* Install the base system
-* Configure the package manager
-* Software select
-  * Please disable every option, except *standard system utilities*.
-* Finish installation
+Choisir l'installation graphique
+*   Sélectionner une langue
+*   Sélectionner votre emplacement
+*   Configurer les locales
+*   Configurer le clavier
+*   Configurer le réseau
+    *   Nom d'hôte : stretch64
+*   Configurer les utilisateurs et mots de passe
+    *   Entrer "vagrant" comme mot de passe root
+    *   Entrer "vagrant" comme nom complet
+    *   Nouvel utilisateur "vagrant"
+    *   et aussi "vagrant" comme mot de passe
+*   Configurer l'horloge
+*   Partitionner les disques
+    *   Guidé - utiliser le disque entier
+    *   Laisser SCSIl (0, 0, 0) (sda) - 8.6 GB ATA VBOX HARDDISK présélectionné et continuer.
+    *   Tous les fichiers dans une seule partition
+    *   Terminer le partitionnement et écrire les changements sur le disque.
+*   Installer le système de base
+*   Configurer le gestionnaire de paquets
+*   Sélection des logiciels
+    *   Veuillez désactiver toutes les options, sauf *utilitaires usuels du système*.
+*   Terminer l'installation
 
 #### Configuration
-* Install sudo
+*   Installer sudo
 
  > $ su
 
  > $ apt-get install -y sudo
 
-* Give sudo permission to vagrant
+*   Donner les permissions sudo à vagrant
 
  > $ visudo -f /etc/sudoers.d/vagrant
 
-* Add the following line to authorize vagrant use sudo without password
+*   Ajouter la ligne suivante pour autoriser vagrant à utiliser sudo sans mot de passe
  > `vagrant ALL=(ALL) NOPASSWD:ALL`
 
-* Exit and disconnect user
-* Update and upgrade
+*   Quitter et déconnecter l'utilisateur
+*   Mettre à jour et monter de version
 
  > $ sudo apt-get update && sudo apt-get upgrade
 
-* Install basic packages
+*   Installer les paquets de base
 
  > $ sudo apt-get install -y build-essential module-assistant
 
@@ -79,9 +79,9 @@ Choose Graphical Install
 
  > $ sudo apt-get install -y zerofree openssh-server
 
- * SSH Configuration
+ *   Configuration SSH
 
- Edit /etc/ssh/sshd_config, Uncomment `AuthorizedKeysFile %h/.ssh/authorized_keys`
+ Éditer /etc/ssh/sshd_config, décommenter `AuthorizedKeysFile %h/.ssh/authorized_keys`
 
  > $ mkdir -p /home/vagrant/.ssh
 
@@ -95,11 +95,11 @@ Choose Graphical Install
 
  > $ chown -R vagrant /home/vagrant/.ssh
 
-* Restart ssh
+*   Redémarrer ssh
 
  > $ sudo service ssh Restart
 
-* Install Guest Tools - Guest Additions CD Image
+*   Installer les additions invité
 
  > $ sudo mount /dev/cdrom /mnt
 
@@ -107,13 +107,13 @@ Choose Graphical Install
 
  > $ sudo ./VBoxLinuxAdditions.run
 
-* Cleaning
+*   Nettoyage
 
  > $ sudo apt-get autoremove && sudo apt-get clean
 
-* Zerofree
+*   Zerofree
 
-  Connect as root
+  Se connecter en tant que root
 
  > $ init 1
 
@@ -121,15 +121,15 @@ Choose Graphical Install
 
  > $ zerofree /dev/sda1
 
-* Restart
+*   Redémarrer
 
- > $ shudown -h now
+ > $ shutdown -h now
 
-* Pack your machine
+*   Empaqueter votre machine
 
  > $ vagrant package --base vagrant-stretch64
 
-## Use your personalize Box
+## Utiliser votre box personnalisée
 
 > $ vagrant box add vagrant-stretch64 package.box
 

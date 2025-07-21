@@ -26,7 +26,7 @@ SVN n'enregistre que le nom d'utilisateur pour chaque commit. Git, lui, attend u
 Exécutez cette commande à la racine de votre projet SVN pour extraire la liste des auteurs :
 
 ```bash
-svn log --xml | grep author | sort -u | perl -pe 's/.*>(.*?)<.*/$1 = /' > users.txt
+svn log --quiet | grep -E "r[0-9]+ \| .* \|" | cut -d'|' -f2 | sed 's/ //g' | sort -u > users.txt
 ```
 
 Ouvrez le fichier `users.txt` et complétez-le pour qu'il respecte le format `Nom d'Utilisateur SVN = Prénom Nom <email@example.com>` :
@@ -56,26 +56,24 @@ L'outil `git-svn` crée des branches et des tags distants qui ne sont pas des br
 
 Placez-vous dans le dossier du projet nouvellement créé (`cd [NOM_DU_PROJET_LOCAL]`) et exécutez les commandes suivantes.
 
-**1. Convertir les tags SVN en tags Git :**
+**1. Convertir les branches distantes SVN en branches locales Git :**
 
 ```bash
-git for-each-ref refs/remotes/origin/tags | cut -d / -f 5- | grep -v @ | while read tagname; do git tag "$tagname" "refs/remotes/origin/tags/$tagname"; done
+git for-each-ref refs/remotes/origin | grep -v 'trunk' | cut -d / -f 4- | while read branchname; do git branch "$branchname" "refs/remotes/origin/$branchname"; done
 ```
 
-**2. Convertir les branches distantes SVN en branches locales Git :**
+**2. Convertir les tags SVN en tags Git :**
 
 ```bash
-git for-each-ref refs/remotes/origin | cut -d / -f 4- | grep -v 'trunk' | while read branchname; do git branch "$branchname" "refs/remotes/origin/$branchname"; done
+git for-each-ref refs/remotes/origin/tags | cut -d / -f 5- | while read tagname; do git tag "$tagname" "refs/remotes/origin/tags/$tagname"; done
 ```
 
-**3. Nettoyer les anciennes références :**
+**3. Renommer la branche `trunk` en `main` :**
 
-Maintenant que les branches et les tags sont convertis, nous pouvons supprimer les références créées par `git-svn`.
+La branche `trunk` de SVN est l'équivalent de la branche principale dans Git. Renommons-la `main` pour suivre les conventions modernes.
 
 ```bash
-git branch -r -d origin/trunk
-git branch -r -d $(git branch -r | grep "origin/tags")
-git branch -r -d $(git branch -r | grep "origin/[^t]") # Supprime les branches restantes sauf trunk
+git branch -m trunk main
 ```
 
 ### Étape 4 : Lier le dépôt Git local à un dépôt distant
@@ -91,7 +89,7 @@ git remote add origin git@[PATH_GIT_DU_PROJET]
 Envoyez tout votre historique, vos branches et vos tags vers le nouveau serveur Git.
 
 ```bash
-# Pousser toutes les branches
+# Pousser la branche principale et toutes les autres branches
 git push origin --all
 
 # Pousser tous les tags

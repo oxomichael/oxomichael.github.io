@@ -1,40 +1,48 @@
 ---
 translationKey: "2016-06-28-apache-proxy-fcgi-php-fpm"
-categories: apache2 php-fpm
+categories:
+- apache2
+- php-fpm
 date: "2016-06-28T21:00:00Z"
 ref: 2016-06-28-apache-proxy-fcgi-php
 title: Apache2, PHP-FPM
 ---
 
-A partir d'Apache version 2.4.10, il est possible d'avoir des performances identiques à NGINX.
-Principalement en utilisant php-fpm avec le mod_fcgi.
+Since Apache version 2.4.10, it's possible to achieve performance similar to NGINX,
+mainly by using php-fpm with mod_fcgi.
 
-## Avec Ubuntu 14.04
-Tout d'abord activer trusty-backports dans /etc/apt/source.list,
-puis autoriser les paquets backports en priorité dans le fichier `/etc/apt/preferences`
+## With Ubuntu 14.04
+
+First, enable `trusty-backports` in `/etc/apt/source.list`,
+then give priority to backports packages in the `/etc/apt/preferences` file:
+
 ```
 Package: *
 Pin: release a=trusty-backports
 Pin-Priority: 500
 ```
 
-Ensuite exécuter
+Then run:
+
 ```bash
 $ apt-get update && apt-get upgrade
 ```
 
-Vérifier que Apache 2.4.10 est bien installé
+Verify that Apache 2.4.10 is installed:
+
 ```bash
 $ apt-get install apache2
 ```
 
-Installer php-fpm (php5-fpm ou php-7.0-fpm)
+Install php-fpm (php5-fpm or php-7.0-fpm):
+
 ```bash
 $ apt-get install php5-fpm
 ```
 
-Créer un fichier /etc/apache2/conf-available/phpfcgi.conf
-```
+Create a file `/etc/apache2/conf-available/phpfcgi.conf`:
+
+```apache
 <FilesMatch "\.php$">
    # Pick one of the following approaches
    # Use the standard TCP socket
@@ -43,30 +51,33 @@ Créer un fichier /etc/apache2/conf-available/phpfcgi.conf
    #SetHandler "proxy:unix:/path/to/app.sock|fcgi://localhost/"
    SetHandler "proxy:unix:/var/run/php5-fpm.sock|fcgi://localhost/"
 </FilesMatch>
-# Définition d'une configuration de mandataire qui convient.
-# La partie qui est mise en correspondance avec la valeur de
-# SetHandler est la partie qui suit le "pipe". Si vous devez faire
-# une distinction, "localhost" peut être changé en un nom de serveur
-# unique.
+# Definition of a suitable proxy configuration.
+# The part that is matched with the value of SetHandler is the part
+# that follows the "pipe". If you need to make a distinction,
+# "localhost" can be changed to a unique server name.
 <Proxy "fcgi://localhost/" enablereuse=on max=10>
 </Proxy>
-# Passer le header Authorization
+# Pass the Authorization header
 SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
 ```
 
-Ce fichier de configuration active la connexion à php-fpm pour tout les vhosts, il est possible de séparer (chroot) chaque vhosts d'apache et de le rediriger vers un php-fpm approprié pour plus de sécurité.
-Activer les modules nécessaires
+This configuration file enables the connection to php-fpm for all vhosts. It is possible to separate (chroot) each Apache vhost and redirect it to an appropriate php-fpm pool for more security.
+
+Enable the necessary modules:
+
 ```bash
 $ a2dismod mpm_prefork php5
-$ a2enmod mpm_event
+$ a2enmod mpm_event proxy_fcgi
 $ a2enconf phpfcgi
 $ service apache2 restart
 ```
 
 ## Debian Stretch
-Avec debian, et maintenant php 7, lorsque que l'on installe php7.0-fpm,
-une conf est automatique créer dans le fichier `/etc/apache2/conf-available/php7.0-fpm.conf`
-```
+
+With Debian, and now PHP 7, when you install `php7.0-fpm`,
+a configuration is automatically created in the `/etc/apache2/conf-available/php7.0-fpm.conf` file:
+
+```apache
 # Redirect to local php-fpm if mod_php is not available
 <IfModule !mod_php7.c>
 <IfModule proxy_fcgi_module>
@@ -92,16 +103,18 @@ une conf est automatique créer dans le fichier `/etc/apache2/conf-available/php
 </IfModule>
 ```
 
-Il suffit donc de l'activer (`a2enconf php7.0-fpm`)
+You just need to enable it (`a2enconf php7.0-fpm`).
 
-## Fonctionnement particulier de php-fpm
-Il est possible d'agir sur des variables d'environnement de PHP par projet (répertoire),
-en utilisant un fichier `.user.ini`
-La modification sera prise en compte à chaque redémarrage du service php-fpm ou
- toutes les 5 minutes.
+## Special behavior of php-fpm
 
-Voilà un exemple:
-```
+It is possible to act on PHP environment variables per project (directory)
+by using a `.user.ini` file.
+The change will be taken into account at each restart of the php-fpm service or
+every 5 minutes.
+
+Here is an example:
+
+```ini
 upload_max_filesize=513M
 post_max_size=513M
 memory_limit=512M

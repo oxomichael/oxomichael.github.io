@@ -1,41 +1,50 @@
 ---
 translationKey: "2016-03-02-linux-usb3-uasp-disable"
-categories: linux usb3 uasp
+categories:
+- linux
+- usb3
+- uasp
 date: "2016-03-02T21:55:00Z"
 ref: 2016-03-02-linux-usb3-uasp-disable
-title: Linux et USB3, Désactiver le protocol UASP
+title: "Linux and USB 3.0: Disabling the UASP Protocol for a Device"
 ---
 
-Après avoir acheter un joli ICY DOCK Black Vortex (MB174SU3S-4SB) pour pouvoir mettre 4 disques pour faire des sauvegardes, l'utilisation de rsync intensif provoque des ralentissements/déconnexion.
-Un petit tour avec DMESG est on remarque plein d'erreur.
+After purchasing an ICY DOCK Black Vortex enclosure (MB174SU3S-4SB) to house four backup drives, I noticed that intensive use of `rsync` was causing slowdowns and unexpected disconnections.
 
-Petite analyse, le disque est branché en USB3 donc
+A quick look at the kernel logs with `dmesg` revealed numerous USB-related errors.
+
+The enclosure is connected via USB 3.0, as confirmed by the `lsusb` command:
 
 ```bash
-$ lusb
+$ lsusb
 Bus 006 Device 002: ID 152d:0567 JMicron Technology Corp. / JMicron USA Technology Corp. JMS567 SATA 6Gb/s bridge
 ```
 
+The `lsusb -t` command shows that the `uas` (USB Attached SCSI) driver is currently in use:
+
 ```bash
-$ lusb -t
+$ lsusb -t
 Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
    |__ Port 1: Dev 2, If 0, Class=Mass Storage, Driver=uas, 5000M
 ```
 
-Nous allons donc désactiver l'utilisation du driver uas afin de repasser sur l'usb-storage
+The `uas` driver is supposed to offer better performance, but it can be unstable with certain controllers. To fix this, we will disable it for this specific device to force the system to use the older but more reliable `usb-storage` driver.
 
-Créer un fichier `/etc/modprobe.d/quirks.conf` avec le contenu suivant
+To do this, create a configuration file for `modprobe`, for example `/etc/modprobe.d/disable-uas.conf`, with the following content:
+
 ```
-options usb-storage quirks=0x152d:0x0567:u
+options usb-storage quirks=152d:0567:u
 ```
 
-Le format de l'option quirks est la suivante `quirks=<VID>:<PID>:u` ou `<VID>` = VendorId et `<PID>` = ProductId du périphérique USB. Le drapeau 'u' désactive le driver uas.
+The format of the `quirks` option is `VendorID:ProductID:flags`.
+- `152d` (VendorID) and `0567` (ProductID) are the identifiers for our device, obtained earlier.
+- The `u` flag (for `UAS_BLACKLIST`) tells the kernel not to use the `uas` driver for this hardware.
 
-Ensuite
+After creating the file, update the module dependencies and the initramfs image (on Debian/Ubuntu-based distributions):
 
 ```bash
-$ depmod -ae
-$ update-initramfs -u
+$ sudo depmod -a
+$ sudo update-initramfs -u
 ```
 
-Puis un reboot. En espérant que cela peut aider.
+Finally, reboot your machine. The device should now use `usb-storage` and be more stable. Hope this helps!

@@ -3,108 +3,108 @@ translationKey: "2017-07-16-ansible-ansistrano-deploy-php-apps"
 categories: php deploy ansible ansistrano
 date: "2017-07-16T23:00:00Z"
 ref: 2017-07-16-ansistrano-deploy-php-apps
-title: Ansistrano Deployement
+title: "Déployer des applications PHP avec Ansistrano"
 ---
 
-Deploy PHP Apps with [Ansistrano](https://ansistrano.com/)
+Déployer des applications PHP avec [Ansistrano](https://ansistrano.com/)
 
-# Install Ansible
+# Installer Ansible
 
 > $ sudo apt-get install software-properties-common
 > $ sudo apt-add-repository ppa:ansible/ansible
 > $ sudo apt-get update
 > $ sudo apt-get install ansible
 
-In /etc/ansible/ansible.cfg
+Dans /etc/ansible/ansible.cfg
  [defaults]
  host_key_checking = false
 
-# Install Ansistrano
+# Installer Ansistrano
 > $ ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback
 
-Update
-If you want to update the role, you need to pass --force parameter when installing. Please, check the following command:
+Mise à jour
+Si vous voulez mettre à jour le rôle, vous devez passer le paramètre --force lors de l'installation. Veuillez vérifier la commande suivante :
 > $ ansible-galaxy install --force carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback
 
-# Ansible repository
-You could organize your deployment repository by company or by type of project.
-I call it "ansible" for example, with directory structure :
+# Dépôt Ansible
+Vous pouvez organiser votre dépôt de déploiement par entreprise ou par type de projet.
+Je l'appelle "ansible" par exemple, avec la structure de répertoires :
 
 apps/
 base/
 files/
 README.md
 
-# Usage
-Install your project ("ansible" for example) from git in the user "deploy" home directory
+# Utilisation
+Installez votre projet ("ansible" par exemple) depuis git dans le répertoire personnel de l'utilisateur "deploy"
 
-Create the public key for the "deploy" user
+Créez la clé publique pour l'utilisateur "deploy"
 > $ ssh-keygen -t rsa
 > $ cp -v ~/.ssh/id_rsa.pub ~/ansible/files/authorized_keys.deploy.pub
 
-I have created to playbook to init remote host
-- base/user-deploy.yml : Create user deploy with permission
-- base/vhosts.yml : Create
+J'ai créé un playbook pour initialiser l'hôte distant
+- base/user-deploy.yml : Créer l'utilisateur deploy avec les permissions
+- base/vhosts.yml : Créer
 
-On each host create the user "deploy"
-> $ ansible-playbook -i {inventory} base/user-deploy.yml --become -k --ask-become-pass --user={first user create on install}
+Sur chaque hôte, créez l'utilisateur "deploy"
+> $ ansible-playbook -i {inventory} base/user-deploy.yml --become -k --ask-become-pass --user={premier utilisateur créé à l'installation}
 
 ```
 ---
-# User Deploy
-- name: Prepare and configure user "deploy"
+# Utilisateur de déploiement
+- name: Préparer et configurer l'utilisateur "deploy"
   hosts: all
   become: yes
   tasks:
-   - name: Add deploy user
+   - name: Ajouter l'utilisateur de déploiement
      user: name=deploy comment="Deploy User" groups=adm,sudo,www-data shell=/bin/bash
-   - name: Adding authorized key to deploy user
+   - name: Ajouter la clé autorisée à l'utilisateur de déploiement
      authorized_key: user=deploy key="{{item}}"
      with_file:
      - ../files/authorized_keys.deploy.pub
-   - name: Ensure /etc/sudoers.d is scanned by sudo
-     # A mistake use pkexec visudo
+   - name: S'assurer que /etc/sudoers.d est scanné par sudo
+     # Une erreur utilise pkexec visudo
      action: lineinfile dest=/etc/sudoers regexp="#includedir\s+/etc/sudoers.d" line="#includedir /etc/sudoers.d" validate="visudo -cf %s"
-   - name: Add deploy user to the sudoers
+   - name: Ajouter l'utilisateur de déploiement aux sudoers
      action: 'lineinfile dest=/etc/sudoers.d/deploy state=present create=yes regexp="deploy .*" line="deploy ALL=(ALL) NOPASSWD: ALL" validate="visudo -cf %s"'
-   - name: Ensure /etc/sudoers.d/deploy file has correct permissions
+   - name: S'assurer que le fichier /etc/sudoers.d/deploy a les bonnes permissions
      action: file path=/etc/sudoers.d/deploy mode=0440 state=file owner=root group=root
 ```
 
-Check main vhost
+Vérifier le vhost principal
 > $ ansible-playbook -i {inventory} base/vhost.yml
 
 ```
 ---
-# Vhost
+# Hôte virtuel
 - hosts: all
   become: yes
   tasks:
-   - name: Create and check vhost directory perms
+   - name: Créer et vérifier les permissions du répertoire vhost
      file: path=/home/vhosts state=directory mode="u=rwx,g=rwx,o=rx" owner=www-data group=www-data
 ```
 
-Filter to execute only on one host
+Filtrer pour exécuter uniquement sur un hôte
 > $ ansible-playbook -i {inventory} -l 192.168.0.0 playbook.yml
 
 
-# Manage a project to deploy
+# Gérer un projet à déployer
 
-We want to make progressive deployment, so we have to define how to work.
-With standard git branch :
+Nous voulons faire un déploiement progressif, nous devons donc définir comment travailler.
+Avec une branche git standard :
 - master : production
-- develop : staging
+- develop : pré-production
 
 
-Following are the commands to execute a deployement
+Voici les commandes pour exécuter un déploiement
 
-Deploying
+Déploiement
 > $ ansible-playbook -i hosts -e "ansistrano_release_version=`date -u +%Y%m%d%H%M%SZ`" deploy.yml
 
-Rolling back
+Retour en arrière
 > $ ansible-playbook -i hosts rollback.yml
 
-Now go read the documentation of Ansistrano to see all the step in the workflow.
+Maintenant, allez lire la documentation d'Ansistrano pour voir toutes les étapes du workflow.
 
 ```
 -- /home/vhosts/my-app.com
@@ -116,18 +116,18 @@ Now go read the documentation of Ansistrano to see all the step in the workflow.
 |-- shared
 ```
 
-You have to make some operation locally and remotely.
+Vous devez effectuer certaines opérations localement et à distance.
 
-Locally :
-- Clone your project
-- Install dependencies
-- ... and all other things
+Localement :
+- Cloner votre projet
+- Installer les dépendances
+- ... et toutes autres choses
 
-Remotely :
-- Files are automatically sent (via rsync) in your remote place
-- Clean temporary files and warmup cache
+À distance :
+- Les fichiers sont automatiquement envoyés (via rsync) à votre emplacement distant
+- Nettoyer les fichiers temporaires et chauffer le cache
 
-Sample with my web app
+Exemple avec mon application web
 ```
 /home/deploy/ansible/apps/my-app.com
 |-- hosts-prod
@@ -143,10 +143,10 @@ Sample with my web app
 |   |-- after-cleanup.yml
 ```
 
-- hosts-prod : contains your production server definition
-- deploy.yml : template of ansistrano
-- etc/ : specific server config files to be place in your remote server
-- config/ : environment files for your project (secret information is store here)
-- tasks/ : specific tasks
+- hosts-prod : contient la définition de votre serveur de production
+- deploy.yml : modèle d'ansistrano
+- etc/ : fichiers de configuration spécifiques au serveur à placer sur votre serveur distant
+- config/ : fichiers d'environnement pour votre projet (les informations secrètes y sont stockées)
+- tasks/ : tâches spécifiques
 
-All these files could be specific for staging.
+Tous ces fichiers peuvent être spécifiques pour la pré-production.

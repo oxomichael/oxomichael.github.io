@@ -6,23 +6,23 @@ ref: 2014-08-17-ubuntu-mysql-upgrade
 title: Upgrade MySQL in Ubuntu
 ---
 
-Mettre à jour Ubuntu (passer d'une version à une autre) et redémarrer MySQL.....oups cela ne marche pas...car comme moi, le répertoire des données est situé en dehors du standard et donc apparmor n'est pas content.
+Updating Ubuntu (from one version to another) and restarting MySQL.....oops it doesn't work...because for me, the data directory is located outside the standard path, and so apparmor is not happy.
 
-Pour faire simple et ne plus avoir de problème :
-Sauvegarder votre fichier de configuration mysql
+To keep it simple and avoid further issues:
+Backup your MySQL configuration file:
 
 ```bash
 $ sudo cp /etc/mysql/my.cnf /etc/mysql/my.cnf.backup
 ```
 
-Modifier la configuration de Apparmor en ajoutant un fichier
+Modify the Apparmor configuration by adding a file:
 
 ```bash
 $ sudo nano /etc/apparmor.d/local/usr.sbin.mysqld
 ```
 
-Ce qui ajoute un fichier spécifique pour la machine local contenant des paramètres supplémentaires, sans changer la configuration de base.
-Contenu du fichier :
+This adds a machine-specific file for local settings containing additional parameters, without changing the base configuration.
+File content:
 
 ```
 # Site-specific additions and overrides for usr.sbin.mysqld.
@@ -32,4 +32,4 @@ Contenu du fichier :
 /dbs/mysql/** rwk
 ```
 
-Et hop faire les mises à jour.
+And then, run the updates.

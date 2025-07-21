@@ -1,161 +1,225 @@
 ---
 translationKey: "2011-08-07-openvpn-server-samba"
-categories: linux openvpn server
+categories:
+- linux
+- openvpn
+- server
 date: "2011-08-07T11:00:00Z"
 ref: 2014-08-17-openvpn-server-samba
-title: OpenVPN Server with Samba Share
+title: "Set Up an OpenVPN Server with Samba Share"
 ---
 
-Pour avoir un accès sécurisé, j'ai débuté l'installation d'OpenVPN en commençant simplement.
-Je souhaite avoir accès par l'intermédiaire du VPN, au réseau interne et que le flux HTTP passe par lui.
-Sur le réseau local, nous sommes en 192.168.0.0/24 avec un serveur dnsmasq pour gérer les requêtes DNS qui me permettent de faire mes propres entrées.
-Donc pour récapituler la machine qui a dnsmasq et OpenVPN sera nommé "Serveur", avec sur le réseau local l'IP 192.168.0.10
+> *This article was originally written in 2011. It has been revised for clarity and updated with more modern configurations. Technologies like OpenVPN and Samba are constantly evolving, so always consult the official documentation for the latest recommendations.*
 
-## Installation
-On installe OpenVPN suivant sa distribution et on passe à la configuration.
-Un HOWTO est disponible sur http://openvpn.net/index.php/open-source/documentation/howto.html#quick
+This guide aims to set up a simple OpenVPN server to secure access to a local network and route all web traffic through it.
 
-La première chose à faire est de copier les fichiers servant à la configuration dans votre répertoire personnel afin de ne pas perdre les fichiers générés lors de mise à jour, etc.
+The local network uses the `192.168.0.0/24` address range. A server on this network, with the IP address `192.168.0.10`, will host OpenVPN and a DNS server (dnsmasq) to manage local DNS queries. We will call it "Server."
 
-`cp /usr/share/doc/openvpn/examples/easy-rsa ~/openvpn/ -R`
+## OpenVPN Installation
 
-L'ensemble des commandes s’exécuteront dans
-`cd ~/openvpn/2.0`
+First, install the OpenVPN package suitable for your Linux distribution. A detailed HOWTO is available on the [official OpenVPN website](http.openvpn.net/index.php/open-source/documentation/howto.html#quick).
 
-## Générer le Certificate Authority (CA) et la clé
-
-Éditer le fichier vars
-```
-export KEY_COUNTRY=FR
-export KEY_PROVINCE=France
-export KEY_CITY=ville
-export KEY_ORG=societe
-export KEY_EMAIL=xxxxxxxxx@xxx.com
+For generating certificates and keys, we will use `easy-rsa`. On modern systems, it is recommended to install it as a separate package:
+```bash
+sudo apt-get update
+sudo apt-get install easy-rsa
 ```
 
-Initialiser le PKI.
+Next, copy the `easy-rsa` directory to a working directory to avoid altering the original files.
+```bash
+cp -r /usr/share/easy-rsa/ ~/openvpn-ca
+cd ~/openvpn-ca
 ```
-. ./vars
-./clean-all
-./build-ca
+> **Note:** The following commands are based on `easy-rsa` version 3. If you are using an older version, the commands may differ (`build-ca`, `build-key-server`, etc.).
+
+## Generating Certificates and Keys
+
+### Initializing the Certificate Authority (CA)
+
+Create a `vars` file in the `~/openvpn-ca` root to define the variables for your certificates.
 ```
-
-La commande finale `build-ca` va construire le CA (certificate d'authorité) et la clé en invoquant les paramètres entrées dans le fichier vars. Le seul paramètre a rentrer et le `Common Name` (nom de domaine du serveur ou autre).
-
-## Générer le certificat et la clé privé pour le serveur
-
-`./build-key-server server`
-
-Comme dans l'étape précédente, les paramètres sont prédéfinies, Mais lorsque l'on vous demande le Common Name entrer "server". Les deux demandes suivantes requiert des réponses positives, "Sign the certificate? [y/n]" and "1 out of 1 certificate requests certified, commit? [y/n]".
-
-## Générer un certificat et une clé pour un client
-
-Déterminer une méthode pour nommer les clients
-
-`./build-key nomclient`
-
-Si vous souhaitez protéger la clé par un mot de passe, utilisé le script `build-key-pass`.
-Lors de la génération, ne pas oubliez d'utiliser pour le `Common Name`, le même nom que dans l'appel du script et toujours utiliser un nom unique pour chaque client.
-
-## Générer les paramètres Diffie Hellman
-
-`./build-dh`
-
-Output :
-```
-Generating DH parameters, 1024 bit long safe prime, generator 2
-This is going to take a long time
-.................+...........................................
-...................+.............+.................+.........
-......................................
+set_var EASYRSA_REQ_COUNTRY    "US"
+set_var EASYRSA_REQ_PROVINCE   "California"
+set_var EASYRSA_REQ_CITY       "YourCity"
+set_var EASYRSA_REQ_ORG        "YourOrganization"
+set_var EASYRSA_REQ_EMAIL      "contact@example.com"
+set_var EASYRSA_REQ_OU         "IT"
 ```
 
-## Copie des fichiers pour le serveur
-
-`cp keys/dh1024.pem keys/ca.crt keys/server.crt keys/server.key /etc/openvpn/`
-
-## Création du fichier de configuration pour le serveur
-
-Des exemples de fichier de configuration sont présent dans `/usr/share/doc/openvpn/examples/sample-config-files` et le placer dans `/etc/openvpn/`.
-Editer donc le fichier `/etc/openvpn/server.conf`
-
-Quelques possibilités d'options:
-
-    En cas d'utilisation d'Ethernet bridgé, il faut utiliser server-bridge et dev tap au lieu de server et dev tun
-    Si le serveur doit écouter sur un port TCP au lieu d'UDP, il faut mettre proto tcp au lieu de proto udp
-    Si l'adresse IP virtuelle utilisée doit être différente de 10.8.0.0/24, il faut modifier la directive server. Ne jamais oublier que la plage d'adresse IP virtuelles doit être inutilisée sur les réseaux de chaque côté du VPN.
-    Pour que les clients soient capables de s'atteindre à travers le VPN, il faut décommenter la directive client-to-client. Par défaut, les clients ne peuvent atteindre que le serveur.
-    Pour augmenter la sécurité, il est possible de décommenter les directives user nobody et group nobody. Diverses options de cryptage et de sécurité peuvent aussi être modifiées. (Le groupe nobody n'existe pas dans ubuntu, il faut donc mettre nogroup)
-
-## Communiquer avec le réseau interne
-`push "route 192.168.0.0 255.255.255.0"`
-
-## Activer l'IP Forwarding dans le noyau
-> $ echo 1 > /proc/sys/net/ipv4/ip_forward
-
-## Faire passer tout le trafic réseau par le VPN
-`push "redirect-gateway def1 bypass-dhcp"`
-
-Comme on fait passer tout le trafic réseau par le VPN, on utilise pousse la configuration DNS pour le client (dnsmasq écoute sur l'adresse IP 10.8.0.1)
-`push "dhcp-option DNS 10.8.0.1"`
-
-Après avoir mis toutes ces options, exécuter la commande suivante
-> $ iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
-
-Cette commande fera que le trafic IP sortant du sous-réseau 10.8.0.0/24 vers l’extérieure pourra revenir routé vers le VPN avec la bonne destination.
-
-/etc/network/interfaces
-```
-iface eth0 inet static
-  ...
-  post-up /sbin/iptables -t nat -A POSTROUTING -s 10.8.37.0/24 -o eth0 -j MASQUERADE
+Initialize the new Public Key Infrastructure (PKI):
+```bash
+./easyrsa init-pki
 ```
 
-/etc/network/if-up.d/iptables
-```
-#!/bin/sh
-iptables -t nat -A POSTROUTING -s 10.8.250.0/24 -o eth0 -j MASQUERADE
-```
-
-Ne pas oublier de redémarrer OpenVPN `/etc/init.d/openvpn restart`
-
-## Création du fichier de configuration pour un client
-
-On va prendre la configuration d'une machine sous winwdows
-On installe OpenVPN http://openvpn.net/index.php/open-source/downloads.html
-Une nouvelle GUI plus récente est disponible ici, il suffira de copier le fichier dans \bin et de refaire un raccourci.
-
-Dans le répertoire config, copier les fichiers : ca.crt, nomclient.crt, nomclient.key
-
-Copier et modifier le fichier de config présent dans sample-config, client.ovpn dans le repertoire config. Et reproduire la configuration server.
-
-Placer la directive remote suivant votre configuration remote domain.tld 1194 ou remote IP_EXTERNE 1194
-Définir les noms de fichier
-```
-    ca ca.crt
-    cert nomclient.crt
-    key nomclient.key
+Build the Certificate Authority (CA) certificate. Choose a Common Name, for example, your domain name.
+```bash
+./easyrsa build-ca
 ```
 
-Lancer la GUI d'OpenVPN, et se connecter. Normalement tout devrait fonctionner.
+### Server Certificate and Key
 
-## Partage réseau
-Suite à mon exemple de configuration d'OpenVPN, une question se pose, comment rendre disponible les différents partages Samba.
-Il existe le serveur WINS. Voir la doc de samba pour plus d'explication avec un ou plusieurs serveur Samba. Concretement au lieu d'utiliser, dans la plupart des case du broadcast pour lister les serveurs qui propose des partages réseaux, on déclare un serveur
-
-Donc le serveur Samba qui fera office de serveur WINS aura dans sa configuration
+Generate the certificate and private key for the OpenVPN server.
+```bash
+./easyrsa build-server-full server nopass
 ```
+The Common Name will be "server." The `nopass` option creates a private key that is not password-protected.
+
+### Client Certificate and Key
+
+Generate a certificate and key for each client that will connect to the VPN.
+```bash
+./easyrsa build-client-full client_name nopass
+```
+Replace `client_name` with a unique name for each client. If you want to protect the key with a password, omit the `nopass` option.
+
+### Diffie-Hellman Parameters
+
+Generate the Diffie-Hellman parameters. Use a length of 2048 bits for adequate security.
+```bash
+./easyrsa gen-dh
+```
+
+### `tls-auth` Key for Added Security
+
+To enhance security, generate a `tls-auth` key, which will help protect the server from DoS attacks.
+```bash
+openvpn --genkey --secret pki/ta.key
+```
+
+## OpenVPN Server Configuration
+
+Copy the generated files to the OpenVPN configuration directory.
+```bash
+sudo cp pki/ca.crt pki/issued/server.crt pki/private/server.key pki/dh.pem pki/ta.key /etc/openvpn/server/
+```
+
+Create the configuration file `/etc/openvpn/server/server.conf`. You can use the examples provided with OpenVPN as a starting point.
+
+Here is a basic configuration:
+```ini
+port 1194
+proto udp
+dev tun
+
+ca ca.crt
+cert server.crt
+key server.key
+dh dh.pem
+
+server 10.8.0.0 255.255.255.0
+ifconfig-pool-persist ipp.txt
+
+# Push routes to allow clients to access the local network
+push "route 192.168.0.0 255.255.255.0"
+
+# Redirect all client traffic through the VPN
+push "redirect-gateway def1 bypass-dhcp"
+
+# Push DNS servers to clients
+push "dhcp-option DNS 10.8.0.1" # Internal DNS
+push "dhcp-option DNS 8.8.8.8"   # Public DNS as a fallback
+
+client-to-client
+keepalive 10 120
+
+# Security
+tls-auth ta.key 0 # Server-side
+cipher AES-256-GCM
+auth SHA256
+
+user nobody
+group nogroup
+persist-key
+persist-tun
+status /var/log/openvpn/openvpn-status.log
+verb 3
+```
+
+### Enabling IP Forwarding
+
+For the server to route packets from VPN clients to the Internet, enable IP forwarding.
+For temporary activation:
+```bash
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
+```
+To make the change permanent, edit `/etc/sysctl.conf` and uncomment or add the line:
+```
+net.ipv4.ip_forward=1
+```
+Apply the change with `sudo sysctl -p`.
+
+### Firewall Configuration (NAT)
+
+Add an `iptables` rule so that outgoing traffic from the VPN is correctly routed.
+```bash
+sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+```
+Replace `eth0` with your primary network interface.
+
+To make this rule persistent, install `iptables-persistent`:
+```bash
+sudo apt-get install iptables-persistent
+sudo netfilter-persistent save
+```
+
+Then, start the OpenVPN server:
+```bash
+sudo systemctl start openvpn-server@server
+```
+
+## Client Configuration
+
+On the client machine, install an OpenVPN client (like OpenVPN Connect). Create a `client.ovpn` configuration file with the following content:
+```ini
+client
+dev tun
+proto udp
+
+remote your_server_ip 1194 # Replace with your server's IP or domain
+
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+
+# Security
+remote-cert-tls server
+cipher AES-256-GCM
+auth SHA256
+key-direction 1 # Must be present with tls-auth
+
+# Key files (place in the same directory as the .ovpn)
+# or use the <ca>...</ca> syntax to include them in the file
+ca ca.crt
+cert client_name.crt
+key client_name.key
+tls-auth ta.key 1
+```
+You will need to copy `ca.crt`, `client_name.crt`, `client_name.key`, and `ta.key` to the client machine.
+
+## File Sharing with Samba (via WINS)
+
+> **Note:** WINS is an older name resolution technology, mainly for older versions of Windows. In modern networks, it is preferable to rely on DNS. This section is kept for informational purposes.
+
+To allow VPN clients to discover Samba shares on the local network, you can use a WINS server.
+
+On your main Samba server (which will also be the WINS server), modify `/etc/samba/smb.conf`:
+```ini
 [global]
-	wins support = yes
-	name resolve order = wins lmhosts hosts bcast
+    # ... other settings
+    wins support = yes
+    name resolve order = wins lmhosts hosts bcast
 ```
 
-Pour les autres serveurs, afin qu'ils soient déclarés.
-```
+On other Samba servers on the network, declare the WINS server:
+```ini
 [global]
-	wins server = 192.168.0.1
+    # ... other settings
+    wins server = 192.168.0.10 # IP of the WINS server
 ```
 
-Notre serveur fait donc office de serveur WINS, DNS, OpenVPN et il faut donc modifier un peu la configuration en ajoutant cette ligne
-
-`push "dhcp-option WINS 10.8.0.1"`
+Finally, push the WINS server configuration to OpenVPN clients by adding this line to your `server.conf`:
+```ini
+push "dhcp-option WINS 10.8.0.1"
+```
+Restart the OpenVPN and Samba services to apply the changes.

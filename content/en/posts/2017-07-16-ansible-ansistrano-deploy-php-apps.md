@@ -3,7 +3,7 @@ translationKey: "2017-07-16-ansible-ansistrano-deploy-php-apps"
 categories: php deploy ansible ansistrano
 date: "2017-07-16T23:00:00Z"
 ref: 2017-07-16-ansistrano-deploy-php-apps
-title: Ansistrano Deployement
+title: "Deploy PHP Apps with Ansistrano"
 ---
 
 Deploy PHP Apps with [Ansistrano](https://ansistrano.com/)
