@@ -5,11 +5,11 @@
   (function() {
     var u="{{ site.Params.analytics.matomo.url }}";
     _paq.push(['setTrackerUrl', u+'matomo.php']);
-    _paq.push(['setSiteId', {{ site.Params.analytics.matomo.ID }}]);
+    _paq.push(['setSiteId', "{{ site.Params.analytics.matomo.siteId }}"]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
     g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
 <noscript>
-<img src="https://{{ site.Params.analytics.matomo.url }}/piwik.php?idsite={{ site.Params.analytics.matomo.ID }}&rec=1" style="border:0" alt="" />
+<img src="https://{{ site.Params.analytics.matomo.url }}/piwik.php?idsite={{ site.Params.analytics.matomo.siteId }}&rec=1" style="border:0" alt="" />
 </noscript>
